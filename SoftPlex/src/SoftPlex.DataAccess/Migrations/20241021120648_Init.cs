@@ -62,7 +62,28 @@ namespace SoftPlex.DataAccess.Migrations
                 name: "ix_product_version_product_id",
                 table: "product_version",
                 column: "product_id");
-        }
+
+            migrationBuilder.CreateIndex(
+	            name: "ix_product_version_width"
+	            , schema: "public"
+	            , table: "product_version"
+	            , column: "width"
+            );
+
+            migrationBuilder.CreateIndex(
+	            name: "ix_product_version_height"
+	            , schema: "public"
+	            , table: "product_version"
+	            , column: "height"
+            );
+
+            migrationBuilder.CreateIndex(
+	            name: "ix_product_version_length"
+	            , schema: "public"
+	            , table: "product_version"
+	            , column: "length"
+            );
+		}
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
