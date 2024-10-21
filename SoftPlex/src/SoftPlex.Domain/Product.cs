@@ -15,7 +15,7 @@ namespace SoftPlex.Domain
 		private Product(Guid id
 			, string name
 			, string? description
-			, List<ProductVersion>? productVersions)
+			, List<ProductVersion> productVersions)
 		{
 			Id = id;
 			Name = name;
@@ -27,7 +27,7 @@ namespace SoftPlex.Domain
 			=> _productVersions = productVersions;
 
 		
-		public static Result<Product> Create(Guid productId
+		public static Result<Product> Create(Guid Id
 			, string name
 			, string? description
 			, IEnumerable<ProductVersion>? productVersions)
@@ -41,10 +41,10 @@ namespace SoftPlex.Domain
 			//if (description is not null && description.Length <= MAX_DESCRIPTION_LENGHT) return Result.Failure<Product>("maximum description length exceeded");
 
 			return Result.Success<Product>(new Product(
-				productId
+				Id
 				, name
 				, description
-				, productVersions?.ToList()));
+				, productVersions?.ToList() ?? new List<ProductVersion>()));
 		}
 		
 		//for ef

@@ -14,14 +14,14 @@ namespace SoftPlex.Domain.ValueObject
 		public decimal Height { get; private set; }
 		public decimal Length { get; private set; }
 
-		private SizeBox(int width, int height, int length)
+		private SizeBox(decimal width, decimal height, decimal length)
 		{
 			Width = width;
 			Height = height;
 			Length = length;
 		}
 
-		public static Result<SizeBox> Create(int width, int height, int length)
+		public static Result<SizeBox> Create(decimal width, decimal height, decimal length)
 		{
 			if (width > 0)
 				return Result.Failure<SizeBox>("invalid width");

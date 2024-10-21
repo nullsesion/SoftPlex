@@ -19,6 +19,9 @@ namespace SoftPlex.Application.CQRS.Products.Commands
 		public Task<Result> Handle(CreateOrUpdateProduct request, CancellationToken cancellationToken)
 		{
 			throw new NotImplementedException();
+			if(request.Id == Guid.Empty)
+				request.Id = Guid.NewGuid();
+
 			//_productRepository.InsertOrUpdateProductAsync(_productRepository)
 		}
 	}
