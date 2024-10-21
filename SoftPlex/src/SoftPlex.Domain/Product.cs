@@ -4,18 +4,18 @@ namespace SoftPlex.Domain
 {
 	public class Product
 	{
-		public const int MAX_TITLE_LENGHT = 255;
+		public const int MAX_NAME_LENGHT = 255;
 
 		public Guid Id { get; private set; }
 		public string Name { get; private set; }
 		public string? Description { get; private set; }
-		private List<ProductVersion> _productVersions;
-		public IReadOnlyList<ProductVersion> ProductVersions => _productVersions;
+		private List<ProductVersion>? _productVersions;
+		public IReadOnlyList<ProductVersion>? ProductVersions => _productVersions;
 
 		private Product(Guid id
 			, string name
 			, string? description
-			, List<ProductVersion> productVersions)
+			, List<ProductVersion>? productVersions)
 		{
 			Id = id;
 			Name = name;
@@ -30,12 +30,12 @@ namespace SoftPlex.Domain
 		public static Result<Product> Create(Guid productId
 			, string name
 			, string? description
-			, IEnumerable<ProductVersion> productVersions)
+			, IEnumerable<ProductVersion>? productVersions)
 		{
 			if (string.IsNullOrWhiteSpace(name))
 				return Result.Failure<Product>("name must not be empty");
 
-			if (name.Length <= MAX_TITLE_LENGHT)
+			if (name.Length > MAX_NAME_LENGHT)
 				return Result.Failure<Product>("maximum name length exceeded");
 
 			//if (description is not null && description.Length <= MAX_DESCRIPTION_LENGHT) return Result.Failure<Product>("maximum description length exceeded");
@@ -44,7 +44,7 @@ namespace SoftPlex.Domain
 				productId
 				, name
 				, description
-				, productVersions.ToList()));
+				, productVersions?.ToList()));
 		}
 		
 		//for ef

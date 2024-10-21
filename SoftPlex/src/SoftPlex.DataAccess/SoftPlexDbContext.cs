@@ -25,8 +25,8 @@ namespace SoftPlex.DataAccess
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.ApplyConfiguration(new ProductConfig());
-			modelBuilder.ApplyConfiguration(new ProductVersionConfig());
+			//modelBuilder.ApplyConfiguration(new ProductConfig());
+			//modelBuilder.ApplyConfiguration(new ProductVersionConfig());
 
 			base.OnModelCreating(modelBuilder);
 		}

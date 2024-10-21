@@ -16,7 +16,7 @@ namespace SoftPlex.DataAccess.Configuration
 			builder.HasIndex(e => e.Name);
 
 			builder.Property(x => x.Name)
-				.HasMaxLength(Product.MAX_TITLE_LENGHT)
+				.HasMaxLength(Product.MAX_NAME_LENGHT)
 				.IsRequired()
 				;
 

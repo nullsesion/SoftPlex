@@ -1,6 +1,7 @@
 
 using SoftPlex.Application.Interfaces;
 using SoftPlex.DataAccess;
+using SoftPlex.DataAccess.Repositories;
 
 namespace SoftPlex.Api
 {
@@ -14,6 +15,11 @@ namespace SoftPlex.Api
 
 			builder.Services.AddControllers();
 			builder.Services.AddDbContext<ISoftPlexDbContext, SoftPlexDbContext>();
+
+			builder.Services.AddScoped<IProductRepository, ProductRepository>();
+			builder.Services.AddMediatR(cfg
+				=> cfg.RegisterServicesFromAssembly(typeof(IProductRepository).Assembly)
+			);
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
