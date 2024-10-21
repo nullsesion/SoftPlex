@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4781D385-CC54-418F-BBD1-2587BC138837}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{07444320-A91C-4569-9B06-3F8F0D9E7159}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		docker\docker-compose.yml = docker\docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.Domain", "src\SoftPlex.Domain\SoftPlex.Domain.csproj", "{D849B0FA-DCC0-4DD1-9D17-CD0AF661684C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.Application", "src\SoftPlex.Application\SoftPlex.Application.csproj", "{41F80331-C43F-4EA6-AAC4-28F878CFAFB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.DataAccess", "src\SoftPlex.DataAccess\SoftPlex.DataAccess.csproj", "{78D91F42-12A4-4031-B9AA-7F9FB74EA563}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.Api", "src\SoftPlex.Api\SoftPlex.Api.csproj", "{00497497-37F1-4EBB-9FA8-A5D67405D72A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D849B0FA-DCC0-4DD1-9D17-CD0AF661684C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D849B0FA-DCC0-4DD1-9D17-CD0AF661684C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D849B0FA-DCC0-4DD1-9D17-CD0AF661684C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D849B0FA-DCC0-4DD1-9D17-CD0AF661684C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41F80331-C43F-4EA6-AAC4-28F878CFAFB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41F80331-C43F-4EA6-AAC4-28F878CFAFB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41F80331-C43F-4EA6-AAC4-28F878CFAFB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41F80331-C43F-4EA6-AAC4-28F878CFAFB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78D91F42-12A4-4031-B9AA-7F9FB74EA563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78D91F42-12A4-4031-B9AA-7F9FB74EA563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78D91F42-12A4-4031-B9AA-7F9FB74EA563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78D91F42-12A4-4031-B9AA-7F9FB74EA563}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00497497-37F1-4EBB-9FA8-A5D67405D72A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00497497-37F1-4EBB-9FA8-A5D67405D72A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00497497-37F1-4EBB-9FA8-A5D67405D72A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00497497-37F1-4EBB-9FA8-A5D67405D72A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D849B0FA-DCC0-4DD1-9D17-CD0AF661684C} = {4781D385-CC54-418F-BBD1-2587BC138837}
+		{41F80331-C43F-4EA6-AAC4-28F878CFAFB5} = {4781D385-CC54-418F-BBD1-2587BC138837}
+		{78D91F42-12A4-4031-B9AA-7F9FB74EA563} = {4781D385-CC54-418F-BBD1-2587BC138837}
+		{00497497-37F1-4EBB-9FA8-A5D67405D72A} = {4781D385-CC54-418F-BBD1-2587BC138837}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02F0FA40-CC9D-4FC7-ACD1-538730180CA3}
+	EndGlobalSection
+EndGlobal
