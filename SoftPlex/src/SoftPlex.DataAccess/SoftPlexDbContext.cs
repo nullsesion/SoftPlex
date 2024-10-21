@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SoftPlex.Application.Interfaces;
 using SoftPlex.DataAccess.Configuration;
+using SoftPlex.DataAccess.Entities;
 using SoftPlex.Domain;
 
 namespace SoftPlex.DataAccess
@@ -25,8 +26,8 @@ namespace SoftPlex.DataAccess
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			//modelBuilder.ApplyConfiguration(new ProductConfig());
-			//modelBuilder.ApplyConfiguration(new ProductVersionConfig());
+			modelBuilder.ApplyConfiguration(new ProductEntityConfig());
+			modelBuilder.ApplyConfiguration(new ProductVersionEntityConfig());
 
 			base.OnModelCreating(modelBuilder);
 		}
@@ -34,8 +35,8 @@ namespace SoftPlex.DataAccess
 		private static readonly ILoggerFactory CreateLoggerFactory
 			= LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-		public DbSet<Product> Products { get; set; }
-		public DbSet<ProductVersion> ProductVersions { get; set; }
+		public DbSet<ProductEntity> Products { get; set; }
+		public DbSet<ProductVersionEntity> ProductVersions { get; set; }
 
 	}
 }

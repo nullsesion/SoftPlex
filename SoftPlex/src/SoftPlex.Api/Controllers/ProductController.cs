@@ -24,6 +24,8 @@ namespace SoftPlex.Api.Controllers
 		[HttpGet]
 		public async Task<IResult> Get(int page, int pageSize, CancellationToken cancellationToken)
 		{
+			throw new NotImplementedException();
+			/*
 			Result<IReadOnlyList<Product>> result = await _mediator.Send(new GetProducts()
 			{
 				Page = page, PageSize = pageSize
@@ -34,6 +36,7 @@ namespace SoftPlex.Api.Controllers
 			}
 
 			return Results.BadRequest(result.Error);
+			*/
 		}
 
 		// GET api/<ProductController>/5

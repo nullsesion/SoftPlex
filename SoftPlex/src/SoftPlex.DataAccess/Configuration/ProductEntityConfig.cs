@@ -22,13 +22,12 @@ namespace SoftPlex.DataAccess.Configuration
 			builder.Property(x => x.Description)
 				;
 
-			/*
-			builder.HasMany(i => i.ProductVersions)
+			builder.HasMany(i => i.ProductVersionEntities)
 				.WithOne()
 				.HasForeignKey(e => e.ProductId)
 				.OnDelete(DeleteBehavior.Cascade)
 				;
-			*/
+
 		}
 	}
 }

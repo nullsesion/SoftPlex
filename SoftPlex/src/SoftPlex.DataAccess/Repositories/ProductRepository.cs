@@ -17,7 +17,9 @@ namespace SoftPlex.DataAccess.Repositories
 
 		public async Task<Result> InsertOrUpdateProductAsync(Product product, CancellationToken cancellationToken)
 		{
+			throw new NotImplementedException();
 			//todo: change to merge
+			/*
 			Product? productEntityFromDb =
 				await _context.Products.FirstOrDefaultAsync(x => x.Id == product.Id, cancellationToken);
 			if (productEntityFromDb is null)
@@ -31,11 +33,14 @@ namespace SoftPlex.DataAccess.Repositories
 			}
 			
 			return Result.Success();
+			*/
 		}
 
 		public async Task<Result<IReadOnlyList<Product>>> GetProductAsync(int page, int pageSize,
 			CancellationToken cancellationToken)
 		{
+			throw new NotImplementedException();
+			/*
 			if (page > 0 && pageSize > 0)
 				Result.Failure<IReadOnlyList<Product>>("Invalid parameters");
 
@@ -47,6 +52,7 @@ namespace SoftPlex.DataAccess.Repositories
 
 
 			return products;
+			*/
 		}
 	}
 }

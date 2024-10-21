@@ -6,6 +6,6 @@
 		public string Name { get; set; }
 		public string? Description { get; set; }
 		
-		public IEnumerable<ProductEntity>? ProductEntitys { get; set; }
+		public IEnumerable<ProductVersionEntity>? ProductVersionEntities { get; set; }
 	}
 }
