@@ -10,7 +10,7 @@ namespace SoftPlex.Domain
 		public string Name { get; private set; }
 		public string? Description { get; private set; }
 		private List<ProductVersion>? _productVersions;
-		public IReadOnlyList<ProductVersion>? ProductVersions => _productVersions;
+		public IReadOnlyList<ProductVersion> ProductVersions => _productVersions;
 
 		private Product(Guid id
 			, string name

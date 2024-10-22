@@ -1,8 +1,12 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SoftPlex.Api.Models;
 using SoftPlex.Application.CQRS.Products.Queries;
 using SoftPlex.Domain;
+using SoftPlex.Domain.ValueObject;
+using System.Linq;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,10 +18,12 @@ namespace SoftPlex.Api.Controllers
 	public class ProductController : ControllerBase
 	{
 		private readonly IMediator _mediator;
+		private readonly IMapper _mapper;
 
-		public ProductController(IMediator mediator)
+		public ProductController(IMediator mediator, IMapper mapper)
 		{
 			_mediator = mediator;
+			_mapper = mapper;
 		}
 
 		// GET: api/<ProductController>
@@ -30,7 +36,29 @@ namespace SoftPlex.Api.Controllers
 			}, cancellationToken);
 			if (result.IsSuccess)
 			{
-				return Results.Json(result.Value);
+				
+				var request = result.Value
+					.Select(x => _mapper.Map<ResponseProduct>(x))
+					;
+				
+				/*
+				var request = result.Value
+					.SelectMany(x => x.ProductVersions)
+					.Select(i => _mapper.Map<ResponseProductVersion>(i))
+				;
+				*/
+				/*
+				var request = result.Value
+						//.Select(x => x.ProductVersions.Select(i => i.SizeBox))
+						.SelectMany(x => x.ProductVersions)
+						.Select(i => _mapper.Map<ResponseSizeBox>(i.SizeBox))
+					;
+				*/
+
+				//_mapper.Map<ResponseProduct>(x)
+				//_mapper.Map<CityResponse>(response.Value)
+
+				return Results.Json(request);
 			}
 			//todo: разделить серверные и пользовательские ошибки
 			return Results.BadRequest(result.Error);

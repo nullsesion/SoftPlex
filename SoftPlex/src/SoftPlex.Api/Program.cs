@@ -1,4 +1,5 @@
 
+using SoftPlex.Api.MapperConfig;
 using SoftPlex.Application.Interfaces;
 using SoftPlex.DataAccess;
 using SoftPlex.DataAccess.Repositories;
@@ -20,6 +21,11 @@ namespace SoftPlex.Api
 			builder.Services.AddMediatR(cfg
 				=> cfg.RegisterServicesFromAssembly(typeof(IProductRepository).Assembly)
 			);
+
+			builder.Services.AddAutoMapper(cfg =>
+			{
+				cfg.AddProfile(typeof(AppMappingProfile));
+			});
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
