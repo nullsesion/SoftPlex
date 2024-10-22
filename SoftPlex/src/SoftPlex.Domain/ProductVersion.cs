@@ -44,10 +44,10 @@ namespace SoftPlex.Domain
 			if (string.IsNullOrWhiteSpace(name))
 				return Result.Failure<ProductVersion>("name must not be empty");
 
-			if (name.Length <= MAX_TITLE_LENGHT)
+			if (name.Length >= MAX_TITLE_LENGHT)
 				return Result.Failure<ProductVersion>("maximum name length exceeded");
 
-			if (description is not null && description.Length <= MAX_DESCRIPTION_LENGHT)
+			if (description is not null && description.Length >= MAX_DESCRIPTION_LENGHT)
 				return Result.Failure<ProductVersion>("maximum description length exceeded");
 
 			return Result.Success(new ProductVersion(

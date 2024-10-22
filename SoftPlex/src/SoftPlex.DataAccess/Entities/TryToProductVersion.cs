@@ -45,12 +45,15 @@ namespace SoftPlex.DataAccess.Entities
 		{
 			productVersions = new List<ProductVersion>();
 			List<ProductVersion> productVersionTmp = new List<ProductVersion>();
-			foreach (ProductVersionEntity pve in productVersionEntities)
+			if (productVersionEntities is not null)
 			{
-				if (!pve.ProductVersionEntityToProductVersion(out ProductVersion pv))
-					return false;
-				else
-					productVersionTmp.Add(pv);
+				foreach (ProductVersionEntity pve in productVersionEntities)
+				{
+					if (!pve.ProductVersionEntityToProductVersion(out ProductVersion pv))
+						return false;
+					else
+						productVersionTmp.Add(pv);
+				}
 			}
 			productVersions = productVersionTmp;
 			return true;

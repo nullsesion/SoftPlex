@@ -15,30 +15,21 @@ namespace SoftPlex.Domain.ValueObject
 		public decimal Length { get; private set; }
 
 		private SizeBox(decimal width, decimal height, decimal length)
-		{
-			Width = width;
-			Height = height;
-			Length = length;
-		}
-
+			=> (Width, Height, Length) = (width, height,length);
+		
 		public static Result<SizeBox> Create(decimal width, decimal height, decimal length)
 		{
-			if (width > 0)
+			//todo: сделать один Result.Failure
+			if (width < 0.001m)
 				return Result.Failure<SizeBox>("invalid width");
 
-			if (height > 0)
+			if (height < 0.001m)
 				return Result.Failure<SizeBox>("invalid height");
 
-			if (length > 0)
+			if (length < 0.001m)
 				return Result.Failure<SizeBox>("invalid length");
 
 			return Result.Success<SizeBox>(new SizeBox(width, height, length));
-		}
-
-		//for ef
-		private SizeBox()
-		{
-
 		}
 	}
 }

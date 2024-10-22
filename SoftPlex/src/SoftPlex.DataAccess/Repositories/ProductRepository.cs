@@ -57,7 +57,7 @@ namespace SoftPlex.DataAccess.Repositories
 			, int pageSize
 			, CancellationToken cancellationToken)
 		{
-			if (page > 0 && pageSize > 0)
+			if (page < 0 && pageSize < 0)
 				Result.Failure<IReadOnlyList<Product>>("Invalid parameters");
 
 			List<Product> result = new List<Product>();
@@ -66,6 +66,7 @@ namespace SoftPlex.DataAccess.Repositories
 				.AsNoTracking()
 				.Skip(pageSize * (page - 1 > 0 ? page - 1 : 0))
 				.Take(pageSize)
+				.Include(x => x.ProductVersionEntities)
 				.ToListAsync(cancellationToken);
 
 			List<Product> products = new List<Product>();

@@ -46,8 +46,5 @@ namespace SoftPlex.Domain
 				, description
 				, productVersions?.ToList() ?? new List<ProductVersion>()));
 		}
-		
-		//for ef
-		private Product() { }
 	}
 }

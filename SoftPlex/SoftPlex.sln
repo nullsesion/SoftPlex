@@ -12,21 +12,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker\docker-compose.yml = docker\docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.Domain", "src\SoftPlex.Domain\SoftPlex.Domain.csproj", "{D849B0FA-DCC0-4DD1-9D17-CD0AF661684C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.Domain", "src\SoftPlex.Domain\SoftPlex.Domain.csproj", "{D849B0FA-DCC0-4DD1-9D17-CD0AF661684C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.Application", "src\SoftPlex.Application\SoftPlex.Application.csproj", "{41F80331-C43F-4EA6-AAC4-28F878CFAFB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.Application", "src\SoftPlex.Application\SoftPlex.Application.csproj", "{41F80331-C43F-4EA6-AAC4-28F878CFAFB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.DataAccess", "src\SoftPlex.DataAccess\SoftPlex.DataAccess.csproj", "{78D91F42-12A4-4031-B9AA-7F9FB74EA563}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.DataAccess", "src\SoftPlex.DataAccess\SoftPlex.DataAccess.csproj", "{78D91F42-12A4-4031-B9AA-7F9FB74EA563}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.Api", "src\SoftPlex.Api\SoftPlex.Api.csproj", "{00497497-37F1-4EBB-9FA8-A5D67405D72A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.Api", "src\SoftPlex.Api\SoftPlex.Api.csproj", "{00497497-37F1-4EBB-9FA8-A5D67405D72A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.Contracts", "src\SoftPlex.Contracts\SoftPlex.Contracts.csproj", "{F865A2BD-D3C2-4188-9FEC-11839F5BA15D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.Contracts", "src\SoftPlex.Contracts\SoftPlex.Contracts.csproj", "{F865A2BD-D3C2-4188-9FEC-11839F5BA15D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.WebApp", "src\SoftPlex.WebApp\SoftPlex.WebApp.csproj", "{48E6BBA8-D3CF-4992-93F4-70CE896D6118}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.WebApp", "src\SoftPlex.WebApp\SoftPlex.WebApp.csproj", "{48E6BBA8-D3CF-4992-93F4-70CE896D6118}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{76966539-7C99-4550-8868-35235790A7E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftPlex.Domain.Tests", "tests\SoftPlex.Domain.Tests\SoftPlex.Domain.Tests.csproj", "{C48E3D38-74C5-4991-A255-C74804A6FE24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.Domain.Tests", "tests\SoftPlex.Domain.Tests\SoftPlex.Domain.Tests.csproj", "{C48E3D38-74C5-4991-A255-C74804A6FE24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
