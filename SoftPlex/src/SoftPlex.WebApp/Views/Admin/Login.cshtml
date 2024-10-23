@@ -1,0 +1,24 @@
+﻿@model LoginViewModel
+
+@{
+	ViewBag.Title = "title";
+	Layout = "_Layout";
+}
+
+<h2>Авторизация</h2>
+
+<form class="login_form" asp-controller="Admin" asp-action="Login" method="post">
+	<div class="login_form__row">
+		<label class="login_form__row_label">User Name</label>
+		<input class="login_form__row_input" type="text" asp-for="UserName" />
+		<span class="login_form__row_input_valid" asp-validation-for="UserName"></span>
+	</div>
+	<div class="login_form__row">
+		<label class="login_form__row_label">Password</label>
+		<input class="login_form__row_input" type="password" asp-for="Password" />
+		<span class="login_form__row_input_valid" asp-validation-for="Password"></span>
+	</div>
+	<div class="login_form__row">
+		<button class="login_form__row_button" type="submit">login</button>
+	</div>
+</form>

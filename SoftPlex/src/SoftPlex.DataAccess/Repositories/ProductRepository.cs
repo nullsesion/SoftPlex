@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SoftPlex.DataAccess.Entities;
 using System.Reflection.Metadata;
+using LinqToDB;
+using System.Xml.Linq;
 
 namespace SoftPlex.DataAccess.Repositories
 {
@@ -15,41 +17,152 @@ namespace SoftPlex.DataAccess.Repositories
 		{
 			
 		}
-
-
+		
 		public async Task<Result> InsertOrUpdateProductAsync(Product product, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
 			
-			using var transaction = _context.Database.BeginTransaction();
+			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				
-				
-				_context.SaveChanges();
-				transaction.Commit();
+				ProductEntity? productEntityFromDb = _context.Products.FirstOrDefault(x => x.Id == product.Id);
+				if (productEntityFromDb is null)
+				{
+					await _context.Products.AddAsync(
+						new ProductEntity()
+						{
+							Id = product.Id,
+							Name = product.Name,
+							Description = product.Description,
+						}
+						, cancellationToken);
+				}
+				else
+				{
+					productEntityFromDb.Name = product.Name;
+					productEntityFromDb.Description = product.Description;
+				}
+
+				if (product.ProductVersions is not null && product.ProductVersions.Count > 0)
+				{
+					foreach (ProductVersion productVersion in product.ProductVersions)
+					{
+						ProductVersionEntity? pve = _context
+							.ProductVersions
+							.FirstOrDefault(x => x.Id == productVersion.Id);
+
+						if (pve is null)
+						{
+							await _context.ProductVersions.AddAsync(
+								new ProductVersionEntity()
+								{
+									Id = productVersion.Id,
+									ProductId = productVersion.ProductId,
+									Name = productVersion.Name,
+									Description = productVersion.Description,
+									Width = productVersion.SizeBox.Width,
+									Height = productVersion.SizeBox.Height,
+									Length = productVersion.SizeBox.Length,
+									CreatingDate = productVersion.CreatingDate.ToUniversalTime()
+								}
+								, cancellationToken);
+						}
+						else
+						{
+							pve.ProductId = productVersion.ProductId;
+							pve.Name = productVersion.Name;
+							pve.Description = productVersion.Description;
+							pve.Width = productVersion.SizeBox.Width;
+							pve.Height = productVersion.SizeBox.Height;
+							pve.Length = productVersion.SizeBox.Length;
+							pve.CreatingDate = productVersion.CreatingDate.ToUniversalTime();
+						}
+					}
+				}
+				await _context.SaveChangesAsync(cancellationToken);
+
+				await transaction.CommitAsync(cancellationToken);
 			}
 			catch (Exception e)
 			{
 				return Result.Failure(e.Message);
 			}
 
-			//todo: change to merge
-			/*
-			Product? productEntityFromDb =
-				await _context.Products.FirstOrDefaultAsync(x => x.Id == product.Id, cancellationToken);
-			if (productEntityFromDb is null)
+			return Result.Success();
+		}
+
+		public async Task<Result> RemoveProductByIdAsync(
+			Guid Id
+			, CancellationToken cancellationToken)
+		{
+			try
 			{
-				await _context.Products.AddAsync(product, cancellationToken);
-				return Result.Success();
+				await _context
+					.Products
+					.Where(c => c.Id == Id)
+					.ExecuteDeleteAsync();
+				//.Remove();
+				await _context.SaveChangesAsync(cancellationToken);
+				
+			}
+			catch (Exception e)
+			{
+				return Result.Failure(e.Message);
+			}
+			return Result.Success();
+		}
+
+		public async Task<Result> RemoveProductVersionByIdAsync(
+			Guid Id
+			, CancellationToken cancellationToken)
+		{
+			try
+			{
+				await _context
+					.ProductVersions
+					.Where(c => c.Id == Id)
+					.ExecuteDeleteAsync();
+				await _context.SaveChangesAsync(cancellationToken);
+			}
+			catch (Exception e)
+			{
+				return Result.Failure(e.Message);
+			}
+			return Result.Success();
+		}
+
+		public async Task<Result<Product>> GetProductByIdAsync(
+			Guid Id
+			, CancellationToken cancellationToken)
+		{
+			ProductEntity? productEntityFromDb = _context.Products
+				.Include(x => x.ProductVersionEntities)
+				.AsNoTracking()
+				.FirstOrDefault(x => x.Id == Id);
+			if (productEntityFromDb == null)
+			{
+				return Result.Failure<Product>("not found");
 			}
 			else
 			{
-				productEntityFromDb = product;
-			}
-			
-			return Result.Success();
-			*/
+
+				productEntityFromDb
+					    .ProductVersionEntities
+					    .ListProductVersionEntityToListProductVersion(out List<ProductVersion> productVersions);
+					
+
+				Result<Product> tryCreateProduct = Product.Create(
+					productEntityFromDb.Id
+					, productEntityFromDb.Name
+					, productEntityFromDb.Description
+					, productVersions
+					);
+
+				if(tryCreateProduct.IsFailure)
+					return Result.Failure<Product>(tryCreateProduct.Error);
+
+				return Result.Success(tryCreateProduct.Value);
+			} 
+
 		}
 
 		public async Task<Result<IReadOnlyList<Product>>> GetProductAsync(
@@ -62,12 +175,12 @@ namespace SoftPlex.DataAccess.Repositories
 
 			List<Product> result = new List<Product>();
 
-			List<ProductEntity> productEntities = await _context.Products
+			List<ProductEntity> productEntities = _context.Products
 				.AsNoTracking()
 				.Skip(pageSize * (page - 1 > 0 ? page - 1 : 0))
 				.Take(pageSize)
 				.Include(x => x.ProductVersionEntities)
-				.ToListAsync(cancellationToken);
+				.ToList();//cancellationToken
 
 			List<Product> products = new List<Product>();
 			foreach (ProductEntity pe in productEntities)

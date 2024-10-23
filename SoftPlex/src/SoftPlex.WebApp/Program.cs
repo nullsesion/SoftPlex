@@ -1,3 +1,6 @@
+using SoftPlex.WebApp.Services;
+using System.Security.Claims;
+
 namespace SoftPlex.WebApp
 {
 	public class Program
@@ -8,6 +11,29 @@ namespace SoftPlex.WebApp
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
+			RazorRuntimeCompilationMvcBuilderExtensions
+				.AddRazorRuntimeCompilation(builder.Services
+					.AddControllersWithViews());
+
+
+			builder.Services.AddAuthentication("Cookie")
+				.AddCookie("Cookie",
+					config =>
+					{
+						config.LoginPath = "/Admin/Login";
+						config.LogoutPath = "/Admin/Logout";
+					})
+				;
+			builder.Services.AddAuthorization(options =>
+			{
+				options.AddPolicy("Administrator", builder =>
+				{
+					builder.RequireClaim(ClaimTypes.Role, "Administrator");
+				});
+			});
+
+			builder.Services.AddScoped<ClientService>();
+
 
 			var app = builder.Build();
 
@@ -20,15 +46,20 @@ namespace SoftPlex.WebApp
 			}
 
 			app.UseHttpsRedirection();
+			app.MapControllers();
 			app.UseStaticFiles();
 
 			app.UseRouting();
 
+			app.UseAuthentication();
 			app.UseAuthorization();
 
+			app.MapDefaultControllerRoute();
+			/*
 			app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}");
+			*/
 
 			app.Run();
 		}

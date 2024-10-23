@@ -1,11 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
 using SoftPlex.Application.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SoftPlex.Domain;
 
 namespace SoftPlex.Application.CQRS.Products.Commands
 {
@@ -16,13 +12,21 @@ namespace SoftPlex.Application.CQRS.Products.Commands
 		public CreateProductOrUpdateHandler(IProductRepository productRepository) 
 			=> _productRepository = productRepository;
 
-		public Task<Result> Handle(CreateOrUpdateProduct request, CancellationToken cancellationToken)
+		public async Task<Result> Handle(CreateOrUpdateProduct request, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
 			if(request.Id == Guid.Empty)
 				request.Id = Guid.NewGuid();
 
-			//_productRepository.InsertOrUpdateProductAsync(_productRepository)
+			Result<Product> productTryCreate = Product.Create(
+				request.Id
+				, request.Name
+				, request.Description  
+				, request.ProductVersions
+				);
+			if (productTryCreate.IsFailure)
+				return Result.Failure(productTryCreate.Error);
+			
+			return await _productRepository.InsertOrUpdateProductAsync(productTryCreate.Value, cancellationToken);
 		}
 	}
 }

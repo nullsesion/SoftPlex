@@ -2,12 +2,17 @@
 using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SoftPlex.Api.Models;
+using SoftPlex.Application.CQRS.Products.Commands;
 using SoftPlex.Application.CQRS.Products.Queries;
 using SoftPlex.Domain;
 using SoftPlex.Domain.ValueObject;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading;
+using SoftPlex.Contracts;
 using IResult = Microsoft.AspNetCore.Http.IResult;
+using SoftPlex.Application.CQRS.ProductVersion.Commands;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,58 +42,83 @@ namespace SoftPlex.Api.Controllers
 			if (result.IsSuccess)
 			{
 				
-				var request = result.Value
+				IEnumerable<ResponseProduct> resp = result.Value
 					.Select(x => _mapper.Map<ResponseProduct>(x))
 					;
-				
-				/*
-				var request = result.Value
-					.SelectMany(x => x.ProductVersions)
-					.Select(i => _mapper.Map<ResponseProductVersion>(i))
-				;
-				*/
-				/*
-				var request = result.Value
-						//.Select(x => x.ProductVersions.Select(i => i.SizeBox))
-						.SelectMany(x => x.ProductVersions)
-						.Select(i => _mapper.Map<ResponseSizeBox>(i.SizeBox))
-					;
-				*/
 
-				//_mapper.Map<ResponseProduct>(x)
-				//_mapper.Map<CityResponse>(response.Value)
-
-				return Results.Json(request);
+				return Results.Json(resp);
 			}
+
 			//todo: разделить серверные и пользовательские ошибки
 			return Results.BadRequest(result.Error);
 		}
 
 		// GET api/<ProductController>/5
 		[HttpGet("{id}")]
-		public string Get(int id)
+		public async Task<IResult> Get(Guid id, CancellationToken cancellationToken)
 		{
-			return "value";
+			Result<Product> result = await _mediator.Send(new GetProductById()
+			{
+				Id = id
+			}, cancellationToken);
+			if(result.IsSuccess)
+				return Results.Json(result.Value);
+
+			//todo: разделить серверные и пользовательские ошибки
+			return Results.BadRequest(result.Error);
 		}
 
 		// POST api/<ProductController>
 		[HttpPost]
-		public void Post([FromBody] string value)
+		public async Task<IResult> Post([FromBody] string value, CancellationToken cancellationToken)
 		{
-		}
+			Guid pid = new Guid("87efbc55-6c4a-42a0-a1e4-ce8582a27977");
+			
+			
+			Result result = await _mediator.Send(new CreateOrUpdateProduct()
+			{
+				Id = pid
+				, Name = "32423432424"
+				, Description = "2343242424"
+				, ProductVersions = new List<ProductVersion>()
+				{
+					ProductVersion.Create(
+						Guid.NewGuid()
+						, pid
+						, "sdsdsdsd"
+						, "asasasas"
+						, SizeBox.Create(100, 1000, 100).Value
+						, DateTime.Now
+					).Value
+					, ProductVersion.Create(
+						Guid.NewGuid()
+						, pid
+						, "dsfdsfsdf"
+						, "adsfdsfsasasas"
+						, SizeBox.Create(100, 1000, 100).Value
+						, DateTime.Now
+					).Value
+				}
+			}, cancellationToken);
 
-		/*
-		// PUT api/<ProductController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value)
-		{
+			if (result.IsSuccess)
+			{
+				return Results.Json(new { success = "ok" });
+			}
+			return Results.BadRequest(result.Error);
+			
 		}
-		*/
 
 		// DELETE api/<ProductController>/5
 		[HttpDelete("{id}")]
-		public void Delete(int id)
+		public async void Delete(Guid id, CancellationToken cancellationToken)
 		{
+			var result = await _mediator.Send(new RemoveProductById()
+			{
+				Id = id
+			}, cancellationToken);
 		}
+
+
 	}
 }

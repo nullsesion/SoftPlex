@@ -1,0 +1,55 @@
+﻿@model SoftPlex.Contracts.ResponseProduct
+<tr>
+			
+<td>@Model.Id</td>
+	<td>@Model.Name</td>
+	<td>@Model.Description</td>
+	<td>
+		@if (@Model.ProductVersions is not null && @Model.ProductVersions.Count() > 0)
+		{
+			@foreach (var productVersion in @Model.ProductVersions)
+			{
+				<div class="product_versions_block">
+					<table>
+						<tr>
+							<th>Id</th>
+							<td>@productVersion.Id</td>
+						</tr>
+						<tr>
+							<th>Name</th>
+							<td>@productVersion.Name</td>
+						</tr>
+						<tr>
+							<th>Description</th>
+							<td>@productVersion.Description</td>
+						</tr>
+						<tr>
+							<th>SizeBox</th>
+							<td>
+								@productVersion.SizeBox.Height x @productVersion.SizeBox.Width x @productVersion.SizeBox.Length
+							</td>
+						</tr>
+						@if (User.Identity.IsAuthenticated)
+						{
+							<tr>
+								<th>Actions</th>
+								<td>
+									<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Remove</a>
+									<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Edit</a>
+								</td>
+							</tr>
+						}
+
+					</table>
+				</div>
+			}
+		}
+	</td>
+	@if (User.Identity.IsAuthenticated)
+	{
+		<td>
+			<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Remove</a>
+			<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Edit</a>
+		</td>
+	}
+</tr>

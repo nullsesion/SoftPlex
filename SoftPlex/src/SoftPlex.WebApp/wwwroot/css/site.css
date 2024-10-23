@@ -20,3 +20,25 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.login_form {
+    display: table;
+}
+
+.login_form__row {
+    display: table-row;
+}
+
+.login_form__row_label,
+.login_form__row_input_valid,
+.login_form__row_input,
+.login_form__row_button {
+    display: table-cell;
+    border-spacing: 5px;
+}
+.login_form__row_label{
+    padding-right: 10px;
+}
+.login_form__row_input_valid {
+    color: red;
+}
