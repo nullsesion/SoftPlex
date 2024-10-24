@@ -13,4 +13,7 @@ public interface IProductRepository
 
 	public Task<Result> RemoveProductVersionByIdAsync(Guid Id, CancellationToken cancellationToken);
 
+	public Result<List<FilterEngineDomain>> GetFromFilterEngine(string productNameIn, string productVersionNameIn,
+		decimal minSize, decimal maxSize);
+
 }

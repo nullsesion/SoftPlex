@@ -1,23 +1,17 @@
-﻿
-@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using SoftPlex.Contracts
-@model IEnumerable<SoftPlex.Contracts.ResponseProduct>
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SoftPlex.Contracts.Response
+@model IEnumerable<SoftPlex.Contracts.Response.ResponseProduct>
 
 @{
 	ViewBag.Title = "title";
 	Layout = "_Layout";
 }
 
-<h2>title</h2>
+<h2>Каталог</h2>
 
-@{
-	if (User.Identity.IsAuthenticated)
-	{
-		<td>
-			<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Add new Product</a>
-		</td>
-	}
-}
+
 <style>
 	table th,
 	table td {
@@ -30,23 +24,26 @@
 	}
 	</style>
 <table>
-	<tr>
+	@if (Model.Count() > 0)
+	{
+		<tr>
+			@*
 		<th>Id</th>
-		<th>Name</th>
-		<th>Description</th>
-		<th>ProductVersions</th>
-		@{
-			if (User.Identity.IsAuthenticated)
-			{
-				<th>Actions</th>
-				<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Logout</a>
+		*@
+			<th>Name</th>
+			<th>Description</th>
+			<th>ProductVersions</th>
+			@{
+				if (User.Identity.IsAuthenticated)
+				{
+					<th>Actions</th>
+				}
 			}
-		}
-		
-	</tr>
-	
+		</tr>
+	}
+
 	@foreach (ResponseProduct item in Model)
 	{
-		<partial name="_ResponseProduct" model="item"/>
+		<partial name="_ResponseProductMain" model="item"/>
 	}
 </table>

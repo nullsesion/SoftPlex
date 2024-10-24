@@ -28,6 +28,7 @@ namespace SoftPlex.DataAccess
 		{
 			modelBuilder.ApplyConfiguration(new ProductEntityConfig());
 			modelBuilder.ApplyConfiguration(new ProductVersionEntityConfig());
+			modelBuilder.Entity<FilterEngineEntity>().HasNoKey().ToView(null);
 
 			base.OnModelCreating(modelBuilder);
 		}
@@ -37,6 +38,7 @@ namespace SoftPlex.DataAccess
 
 		public DbSet<ProductEntity> Products { get; set; }
 		public DbSet<ProductVersionEntity> ProductVersions { get; set; }
+		public DbSet<FilterEngineEntity> filterEngineEntity { get; set; }
 
 	}
 }

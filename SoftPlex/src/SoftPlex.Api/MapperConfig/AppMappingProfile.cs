@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using SoftPlex.Domain.ValueObject;
-using SoftPlex.Contracts;
 using SoftPlex.Domain;
+using SoftPlex.Contracts.Response;
 
 namespace SoftPlex.Api.MapperConfig
 {
@@ -9,6 +9,10 @@ namespace SoftPlex.Api.MapperConfig
 	{
 		public AppMappingProfile()
 		{
+			//
+			CreateMap<ResponseFilterEngine, FilterEngineDomain>();
+			CreateMap<FilterEngineDomain,ResponseFilterEngine>();
+
 			CreateMap<SizeBox, ResponseSizeBox>();
 			CreateMap<ProductVersion,ResponseProductVersion>()
 				.ForMember(dest => dest.SizeBox

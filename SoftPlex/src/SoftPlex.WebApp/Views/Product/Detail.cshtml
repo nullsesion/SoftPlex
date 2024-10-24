@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SoftPlex.Contracts
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SoftPlex.Contracts.Response.ResponseProduct
+
+@{
+	ViewBag.Title = "title";
+	Layout = "_Layout";
+}
+
+<h2>title</h2>
+
+<style>
+	table th,
+	table td {
+		border: 1px solid #000;
+	}
+
+	.product_versions_block {
+		padding: 15px;
+		border: 1px solid #000;
+	}
+</style>
+<table>
+	<tr>
+		@*
+		<th>Id</th>
+		*@
+		<th>Name</th>
+		<th>Description</th>
+		<th>ProductVersions</th>
+		@{
+			if (User.Identity.IsAuthenticated)
+			{
+				<th>Actions</th>
+				<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Logout</a>
+			}
+		}
+
+	</tr>
+	<partial name="_ResponseProduct" model="Model" />
+	
+</table>

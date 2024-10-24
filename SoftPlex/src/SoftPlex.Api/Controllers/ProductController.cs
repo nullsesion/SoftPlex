@@ -10,9 +10,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
-using SoftPlex.Contracts;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 using SoftPlex.Application.CQRS.ProductVersion.Commands;
+using SoftPlex.Contracts.Response;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -72,6 +72,7 @@ namespace SoftPlex.Api.Controllers
 		[HttpPost]
 		public async Task<IResult> Post([FromBody] string value, CancellationToken cancellationToken)
 		{
+			
 			Guid pid = new Guid("87efbc55-6c4a-42a0-a1e4-ce8582a27977");
 			
 			
@@ -107,6 +108,7 @@ namespace SoftPlex.Api.Controllers
 			}
 			return Results.BadRequest(result.Error);
 			
+			//return Results.Json(value);
 		}
 
 		// DELETE api/<ProductController>/5
@@ -118,7 +120,5 @@ namespace SoftPlex.Api.Controllers
 				Id = id
 			}, cancellationToken);
 		}
-
-
 	}
 }

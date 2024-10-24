@@ -40,12 +40,12 @@ public class AdminController : Controller
 		await HttpContext.SignInAsync("Cookie", claimPrincipal);
 
 		
-		return Redirect( "/");
+		return RedirectToAction("Index", "Home");
 	}
 
 	public IActionResult Logout()
 	{
 		HttpContext.SignOutAsync("Cookie");
-		return Redirect("/");
+		return RedirectToAction("Index", "Home");
 	}
 }

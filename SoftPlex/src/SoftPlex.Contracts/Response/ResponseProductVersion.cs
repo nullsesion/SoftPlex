@@ -1,4 +1,4 @@
-﻿namespace SoftPlex.Contracts;
+﻿namespace SoftPlex.Contracts.Response;
 
 public class ResponseProductVersion
 {

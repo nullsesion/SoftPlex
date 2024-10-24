@@ -204,5 +204,39 @@ namespace SoftPlex.DataAccess.Repositories
 
 			return result;
 		}
+
+		
+		public Result<List<FilterEngineDomain>> GetFromFilterEngine(
+			string productNameIn
+			, string productVersionNameIn
+			, decimal minSize
+			, decimal maxSize
+		)
+		{
+			string p1 = productNameIn;
+			string p2 = productVersionNameIn;
+
+
+			//todo: проверить на возможные sqlinjection
+			List<FilterEngineEntity> filterEngineEntities = _context.filterEngineEntity
+				.FromSqlRaw($"select * from public.filter_engine('{p1}','{p2}',{minSize},{maxSize})", p1, p2)
+				.ToList();
+
+			List<FilterEngineDomain> listFilterEngineDomain = new List<FilterEngineDomain>();
+			foreach (FilterEngineEntity item in filterEngineEntities)
+			{
+				listFilterEngineDomain.Add(new FilterEngineDomain()
+				{
+					Id = item.Id,
+					ProductName = item.ProductName,
+					ProductVersionName = item.ProductVersionName,
+					Width = item.Width,
+					Height = item.Height,
+					Length = item.Length,
+				});
+			}
+			
+			return listFilterEngineDomain;
+		}
 	}
 }

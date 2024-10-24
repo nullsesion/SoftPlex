@@ -1,4 +1,5 @@
 ﻿using SoftPlex.Contracts;
+using SoftPlex.Contracts.Response;
 using SoftPlex.Domain;
 
 namespace SoftPlex.Api.MapperConfig

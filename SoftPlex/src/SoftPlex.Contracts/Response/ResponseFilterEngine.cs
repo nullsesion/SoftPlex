@@ -1,6 +1,6 @@
-﻿namespace SoftPlex.DataAccess.Entities
+﻿namespace SoftPlex.Contracts.Response
 {
-	public class FilterEngineEntity
+	public class ResponseFilterEngine
 	{
 		public Guid Id { get; set; }
 		public string ProductName { get; set; }

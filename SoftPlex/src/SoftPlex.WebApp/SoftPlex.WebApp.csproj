@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\" />
     <Folder Include="wwwroot\vendor\" />
   </ItemGroup>
 
@@ -24,12 +25,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\ProductFilter\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Product\Detail.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Product\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Admin\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Views\Product\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Product\Detail.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\ProductFilter\Index.cshtml" />
   </ItemGroup>
 
 </Project>

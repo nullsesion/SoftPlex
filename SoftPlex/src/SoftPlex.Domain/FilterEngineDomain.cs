@@ -1,6 +1,6 @@
-﻿namespace SoftPlex.DataAccess.Entities
+﻿namespace SoftPlex.Domain
 {
-	public class FilterEngineEntity
+	public class FilterEngineDomain
 	{
 		public Guid Id { get; set; }
 		public string ProductName { get; set; }

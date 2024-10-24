@@ -1,4 +1,5 @@
-﻿@model SoftPlex.Contracts.ResponseProduct
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SoftPlex.Contracts.Response.ResponseProduct
 <tr>
 			
 <td>@Model.Id</td>
@@ -34,7 +35,11 @@
 							<tr>
 								<th>Actions</th>
 								<td>
-									<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Remove</a>
+									<a class="nav-link text-dark"
+									   onclick="return confirm('Are you sure you want to delete this item?');"
+									   asp-controller="Product" 
+									   asp-action="RemoveProductVersion"
+									   asp-route-id="@productVersion.Id">Remove</a>
 									<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Edit</a>
 								</td>
 							</tr>
@@ -48,7 +53,11 @@
 	@if (User.Identity.IsAuthenticated)
 	{
 		<td>
-			<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Remove</a>
+			<a class="nav-link text-dark"
+			   onclick="return confirm('Are you sure you want to delete this item?');"
+			   asp-controller="Product" 
+			   asp-action="RemoveProduct" 
+			   asp-route-id="@Model.Id">Remove</a>
 			<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Edit</a>
 		</td>
 	}
