@@ -2,6 +2,8 @@
 using SoftPlex.Domain.ValueObject;
 using SoftPlex.Domain;
 using SoftPlex.Contracts.Response;
+using SoftPlex.Contracts.Request;
+using SoftPlex.Application.CQRS.Products.Commands;
 
 namespace SoftPlex.Api.MapperConfig
 {
@@ -12,6 +14,9 @@ namespace SoftPlex.Api.MapperConfig
 			//
 			CreateMap<ResponseFilterEngine, FilterEngineDomain>();
 			CreateMap<FilterEngineDomain,ResponseFilterEngine>();
+
+			;
+			//
 
 			CreateMap<SizeBox, ResponseSizeBox>();
 			CreateMap<ProductVersion,ResponseProductVersion>()

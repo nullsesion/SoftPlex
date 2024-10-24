@@ -15,6 +15,5 @@ namespace SoftPlex.Contracts.Request
 		public decimal Width { get; set; }
 		public decimal Height { get; set; }
 		public decimal Length { get; set; }
-		public DateTime CreatingDate { get; set; }
 	}
 }

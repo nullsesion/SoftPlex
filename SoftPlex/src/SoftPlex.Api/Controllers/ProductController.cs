@@ -12,7 +12,9 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 using SoftPlex.Application.CQRS.ProductVersion.Commands;
+using SoftPlex.Contracts.Request;
 using SoftPlex.Contracts.Response;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -70,11 +72,46 @@ namespace SoftPlex.Api.Controllers
 
 		// POST api/<ProductController>
 		[HttpPost]
-		public async Task<IResult> Post([FromBody] string value, CancellationToken cancellationToken)
+		public async Task<IResult> Post([FromBody] RequestProduct value, CancellationToken cancellationToken)
 		{
-			
+			Guid productGuid = value.Id == Guid.Empty ? Guid.NewGuid() : value.Id;
+			List<ProductVersion> productVersions = new List<ProductVersion>();
+			foreach (RequestProductVersion item in value.ListRequestProductVersion)
+			{
+				Guid productVersionId = item.Id == Guid.Empty?Guid.NewGuid() : item.Id;
+				Result<SizeBox> trySizeBox = SizeBox.Create(item.Width, item.Height, item.Length);
+				if(trySizeBox.IsFailure)
+					continue;
+
+				//item
+				Result<ProductVersion> tryProductVersion = ProductVersion.Create(
+					productVersionId
+					, productGuid
+					, item.Name
+					, item.Description
+					, trySizeBox.Value
+					,  DateTime.Now
+					);
+
+				if(tryProductVersion.IsSuccess)
+					productVersions.Add(tryProductVersion.Value);
+			}
+
+			CreateOrUpdateProduct createOrUpdateProduct = new CreateOrUpdateProduct()
+			{
+				Id = productGuid,
+				Name = value.Name,
+				Description = value.Description,
+				ProductVersions = productVersions,
+			};
+
+			Result result = await _mediator.Send(createOrUpdateProduct, cancellationToken);
+			if (result.IsFailure)
+				return Results.BadRequest(result.Error); 
+
+
+			/*
 			Guid pid = new Guid("87efbc55-6c4a-42a0-a1e4-ce8582a27977");
-			
 			
 			Result result = await _mediator.Send(new CreateOrUpdateProduct()
 			{
@@ -107,8 +144,8 @@ namespace SoftPlex.Api.Controllers
 				return Results.Json(new { success = "ok" });
 			}
 			return Results.BadRequest(result.Error);
-			
-			//return Results.Json(value);
+			*/
+			return Results.Json(new { success = "ok" });
 		}
 
 		// DELETE api/<ProductController>/5

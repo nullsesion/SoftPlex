@@ -43,5 +43,15 @@ namespace SoftPlex.WebApp.Controllers
 			await _clientService.RemoveProductVersion(id);
 			return RedirectToAction("Index");
 		}
+
+		[Authorize]
+		[HttpPost]
+		public async Task<IResult> CreateProduct()
+		{
+			//todo: add async
+			//await _clientService.CreateProduct();
+			
+			return Results.Json(new {success = "ok"});
+		}
 	}
 }
