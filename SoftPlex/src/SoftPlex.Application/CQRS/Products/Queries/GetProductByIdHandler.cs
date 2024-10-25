@@ -2,10 +2,11 @@
 using MediatR;
 using SoftPlex.Application.Interfaces;
 using SoftPlex.Domain;
+using SoftPlex.Domain.Shared;
 
 namespace SoftPlex.Application.CQRS.Products.Queries
 {
-	public class GetProductByIdHandler : IRequestHandler<GetProductById, Result<Product>>
+	public class GetProductByIdHandler : IRequestHandler<GetProductById, Result<Product, ErrorList>>
 	{
 		private readonly IProductRepository _productRepository;
 
@@ -14,7 +15,7 @@ namespace SoftPlex.Application.CQRS.Products.Queries
 			_productRepository = productRepository;
 		}
 
-		public async Task<Result<Product>> Handle(GetProductById request, CancellationToken cancellationToken)
+		public async Task<Result<Product, ErrorList>> Handle(GetProductById request, CancellationToken cancellationToken)
 		{
 			return await _productRepository.GetProductByIdAsync(request.Id, cancellationToken);
 		}

@@ -43,7 +43,7 @@ namespace SoftPlex.Api.Controllers
 			if (string.IsNullOrWhiteSpace(productVersionNameIn))
 				productVersionNameIn = "";
 
-			Result<List<FilterEngineDomain>> result = await _mediator.Send(new FilterEngine()
+			var result = await _mediator.Send(new FilterEngine()
 			{
 				ProductNameIn = productNameIn,
 				ProductVersionNameIn = productVersionNameIn,

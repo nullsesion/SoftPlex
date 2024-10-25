@@ -1,12 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using SoftPlex.Application.Interfaces;
 using SoftPlex.Domain;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SoftPlex.DataAccess.Entities;
-using System.Reflection.Metadata;
-using LinqToDB;
-using System.Xml.Linq;
+using SoftPlex.Domain.Shared;
 
 namespace SoftPlex.DataAccess.Repositories
 {
@@ -18,9 +15,8 @@ namespace SoftPlex.DataAccess.Repositories
 			
 		}
 		
-		public async Task<Result> InsertOrUpdateProductAsync(Product product, CancellationToken cancellationToken)
+		public async Task<Result<bool, ErrorList>> InsertOrUpdateProductAsync(Product product, CancellationToken cancellationToken)
 		{
-			
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
@@ -84,13 +80,15 @@ namespace SoftPlex.DataAccess.Repositories
 			}
 			catch (Exception e)
 			{
-				return Result.Failure(e.Message);
+				ErrorList errorList = new ErrorList();
+				errorList.AddError(new Error(e.Message, ErrorType.ServerError, null));
+				return Result.Failure<bool, ErrorList>(errorList); //tryCreateProduct.Error
 			}
 
-			return Result.Success();
+			return Result.Success<bool, ErrorList>(true);
 		}
 
-		public async Task<Result> RemoveProductByIdAsync(
+		public async Task<Result<bool, ErrorList>> RemoveProductByIdAsync(
 			Guid Id
 			, CancellationToken cancellationToken)
 		{
@@ -106,12 +104,14 @@ namespace SoftPlex.DataAccess.Repositories
 			}
 			catch (Exception e)
 			{
-				return Result.Failure(e.Message);
+				ErrorList errorList = new ErrorList();
+				errorList.AddError(new Error(e.Message, ErrorType.ServerError, null));
+				return Result.Failure<bool, ErrorList>(errorList); 
 			}
-			return Result.Success();
+			return Result.Success<bool, ErrorList>(true);
 		}
 
-		public async Task<Result> RemoveProductVersionByIdAsync(
+		public async Task<Result<bool, ErrorList>> RemoveProductVersionByIdAsync(
 			Guid Id
 			, CancellationToken cancellationToken)
 		{
@@ -125,22 +125,27 @@ namespace SoftPlex.DataAccess.Repositories
 			}
 			catch (Exception e)
 			{
-				return Result.Failure(e.Message);
+				ErrorList errorList = new ErrorList();
+				errorList.AddError(new Error(e.Message, ErrorType.ServerError, null));
+				return Result.Failure<bool, ErrorList>(errorList);
 			}
-			return Result.Success();
+			return Result.Success<bool, ErrorList>(true);
 		}
 
-		public async Task<Result<Product>> GetProductByIdAsync(
+		public async Task<Result<Product, ErrorList>> GetProductByIdAsync(
 			Guid Id
 			, CancellationToken cancellationToken)
 		{
+			ErrorList errorList = new ErrorList();
+
 			ProductEntity? productEntityFromDb = _context.Products
 				.Include(x => x.ProductVersionEntities)
 				.AsNoTracking()
 				.FirstOrDefault(x => x.Id == Id);
 			if (productEntityFromDb == null)
 			{
-				return Result.Failure<Product>("not found");
+				errorList.AddError(new Error($"Not Found by id {Id}",ErrorType.NotFound,null));
+				return Result.Failure<Product, ErrorList>(errorList);
 			}
 			else
 			{
@@ -150,22 +155,25 @@ namespace SoftPlex.DataAccess.Repositories
 					    .ListProductVersionEntityToListProductVersion(out List<ProductVersion> productVersions);
 					
 
-				Result<Product> tryCreateProduct = Product.Create(
+				Result<Product, ErrorList> tryCreateProduct = Product.Create(
 					productEntityFromDb.Id
 					, productEntityFromDb.Name
 					, productEntityFromDb.Description
 					, productVersions
 					);
 
-				if(tryCreateProduct.IsFailure)
-					return Result.Failure<Product>(tryCreateProduct.Error);
-
-				return Result.Success(tryCreateProduct.Value);
+				if (tryCreateProduct.IsFailure)
+				{
+					errorList.AddError(new Error($"Server Error in GetProductByIdAsync", ErrorType.ServerError, null));
+					return Result.Failure<Product, ErrorList>(errorList); //tryCreateProduct.Error
+				}
+					
+				return Result.Success<Product, ErrorList>(tryCreateProduct.Value);
 			} 
 
 		}
 
-		public async Task<Result<IReadOnlyList<Product>>> GetProductAsync(
+		public async Task<Result<IReadOnlyList<Product>, ErrorList>> GetProductAsync(
 			  int page
 			, int pageSize
 			, CancellationToken cancellationToken)
@@ -190,7 +198,7 @@ namespace SoftPlex.DataAccess.Repositories
 				if (!pe.ProductVersionEntities.ListProductVersionEntityToListProductVersion(out List<ProductVersion> productVersions))
 					continue;
 
-				Result<Product> tryCreateProduct
+				Result<Product, ErrorList> tryCreateProduct
 					= Product.Create(
 						pe.Id
 						, pe.Name
@@ -206,7 +214,7 @@ namespace SoftPlex.DataAccess.Repositories
 		}
 
 		
-		public Result<List<FilterEngineDomain>> GetFromFilterEngine(
+		public Result<List<FilterEngineDomain>, ErrorList> GetFromFilterEngine(
 			string productNameIn
 			, string productVersionNameIn
 			, decimal minSize

@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.DataAccess", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.Api", "src\SoftPlex.Api\SoftPlex.Api.csproj", "{00497497-37F1-4EBB-9FA8-A5D67405D72A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.Contracts", "src\SoftPlex.Contracts\SoftPlex.Contracts.csproj", "{F865A2BD-D3C2-4188-9FEC-11839F5BA15D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.Shared", "src\SoftPlex.Contracts\SoftPlex.Shared.csproj", "{F865A2BD-D3C2-4188-9FEC-11839F5BA15D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftPlex.WebApp", "src\SoftPlex.WebApp\SoftPlex.WebApp.csproj", "{48E6BBA8-D3CF-4992-93F4-70CE896D6118}"
 EndProject

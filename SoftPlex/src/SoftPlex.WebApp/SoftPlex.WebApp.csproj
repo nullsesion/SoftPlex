@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SoftPlex.Contracts\SoftPlex.Contracts.csproj" />
+    <ProjectReference Include="..\SoftPlex.Contracts\SoftPlex.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

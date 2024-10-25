@@ -28,20 +28,29 @@ namespace SoftPlex.Domain
 			=> _productVersions = productVersions;
 
 		//todo add ,Error
-		public static Result<Product> Create(Guid Id 
+		public static Result<Product, ErrorList> Create(Guid Id 
 			, string name
 			, string? description
 			, IEnumerable<ProductVersion>? productVersions)
 		{
+			ErrorList errorList = new ErrorList();
 			if (string.IsNullOrWhiteSpace(name))
-				return Result.Failure<Product>("name must not be empty"); //, Error
+				errorList.AddError(new Error("must not be empty", ErrorType.Validation, "Name"));
 
 			if (name.Length > MAX_NAME_LENGHT)
-				return Result.Failure<Product>("maximum name length exceeded");
+				errorList.AddError(new Error("maximum length exceeded",ErrorType.Validation,"Name"));
 
-			//if (description is not null && description.Length <= MAX_DESCRIPTION_LENGHT) return Result.Failure<Product>("maximum description length exceeded");
+			//for debug
+			if (name.Contains("404"))
+				errorList.AddError(new Error("name contains 404", ErrorType.Validation, "Name"));
 
-			return Result.Success<Product>(new Product(
+			if (description is not null && description.Contains("404"))
+				errorList.AddError(new Error("name contains 404", ErrorType.Validation, "Name"));
+
+			if (errorList.IsError)
+				return Result.Failure<Product, ErrorList>(errorList);
+
+			return Result.Success<Product, ErrorList>(new Product(
 				Id
 				, name
 				, description

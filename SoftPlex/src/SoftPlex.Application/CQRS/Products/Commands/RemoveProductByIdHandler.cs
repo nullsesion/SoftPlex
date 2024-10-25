@@ -1,11 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
 using SoftPlex.Application.Interfaces;
+using SoftPlex.Domain.Shared;
 
 
 namespace SoftPlex.Application.CQRS.Products.Commands
 {
-	public class RemoveProductByIdHandler : IRequestHandler<RemoveProductById, Result>
+	public class RemoveProductByIdHandler : IRequestHandler<RemoveProductById, Result<bool, ErrorList>>
 	{
 		private readonly IProductRepository _productRepository;
 
@@ -14,7 +15,7 @@ namespace SoftPlex.Application.CQRS.Products.Commands
 			_productRepository = productRepository;
 		}
 
-		public async Task<Result> Handle(RemoveProductById request, CancellationToken cancellationToken)
+		public async Task<Result<bool, ErrorList>> Handle(RemoveProductById request, CancellationToken cancellationToken)
 		{
 			return await _productRepository.RemoveProductByIdAsync(request.Id, cancellationToken);
 		}

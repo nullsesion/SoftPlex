@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using SoftPlex.Domain.Shared;
 
 namespace SoftPlex.Domain.Tests
 {
@@ -11,7 +12,7 @@ namespace SoftPlex.Domain.Tests
 			
 
 			//act
-			Result<Product> productCreated = Product.Create(Guid.NewGuid(), "name", null, null);
+			Result<Product, ErrorList> productCreated = Product.Create(Guid.NewGuid(), "name", null, null);
 
 			//assert
 			//productCreated.IsSuccess
@@ -25,7 +26,7 @@ namespace SoftPlex.Domain.Tests
 			string name = new String('a', Product.MAX_NAME_LENGHT);
 
 			//act
-			Result<Product> productCreated = Product.Create(Guid.NewGuid(), name, null,null);
+			Result<Product, ErrorList> productCreated = Product.Create(Guid.NewGuid(), name, null,null);
 
 			//assert
 			//productCreated.IsSuccess
@@ -39,7 +40,7 @@ namespace SoftPlex.Domain.Tests
 			string name = new String('a', Product.MAX_NAME_LENGHT + 1); 
 
 			//act
-			Result<Product> productCreated = Product.Create(Guid.NewGuid(), name, null, null);
+			Result<Product, ErrorList> productCreated = Product.Create(Guid.NewGuid(), name, null, null);
 
 			//assert
 			//productCreated.IsSuccess

@@ -1,5 +1,6 @@
 ﻿using SoftPlex.Domain;
 using CSharpFunctionalExtensions;
+using SoftPlex.Domain.Shared;
 using SoftPlex.Domain.ValueObject;
 
 namespace SoftPlex.DataAccess.Entities
@@ -11,7 +12,7 @@ namespace SoftPlex.DataAccess.Entities
 		public static bool ProductVersionEntityToProductVersion(this ProductVersionEntity productVersionEntity, out ProductVersion productVersion)
 		{
 			productVersion = null;
-			Result<SizeBox> sizeBox = SizeBox
+			Result<SizeBox, ErrorList> sizeBox = SizeBox
 				.Create(productVersionEntity.Width
 					, productVersionEntity.Height
 					, productVersionEntity.Length);
@@ -19,7 +20,7 @@ namespace SoftPlex.DataAccess.Entities
 			if (sizeBox.IsFailure)
 				return false;
 
-			Result<ProductVersion> pve = ProductVersion.Create(
+			Result<ProductVersion, ErrorList> pve = ProductVersion.Create(
 				productVersionEntity.Id
 				, productVersionEntity.ProductId
 				, productVersionEntity.Name

@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SoftPlex.Application\SoftPlex.Application.csproj" />
-    <ProjectReference Include="..\SoftPlex.Contracts\SoftPlex.Contracts.csproj" />
+    <ProjectReference Include="..\SoftPlex.Contracts\SoftPlex.Shared.csproj" />
     <ProjectReference Include="..\SoftPlex.DataAccess\SoftPlex.DataAccess.csproj" />
     <ProjectReference Include="..\SoftPlex.Domain\SoftPlex.Domain.csproj" />
   </ItemGroup>

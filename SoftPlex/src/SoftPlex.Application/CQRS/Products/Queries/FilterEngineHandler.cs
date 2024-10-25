@@ -2,10 +2,11 @@
 using MediatR;
 using SoftPlex.Application.Interfaces;
 using SoftPlex.Domain;
+using SoftPlex.Domain.Shared;
 
 namespace SoftPlex.Application.CQRS.Products.Queries
 {
-	public class FilterEngineHandler: IRequestHandler<FilterEngine, Result<List<FilterEngineDomain>>>
+	public class FilterEngineHandler: IRequestHandler<FilterEngine, Result<List<FilterEngineDomain>, ErrorList>>
 	{
 		private readonly IProductRepository _productRepository;
 
@@ -14,11 +15,13 @@ namespace SoftPlex.Application.CQRS.Products.Queries
 			_productRepository = productRepository;
 		}
 
-		public async Task<Result<List<FilterEngineDomain>>> Handle(FilterEngine request, CancellationToken cancellationToken)
+		public async Task<Result<List<FilterEngineDomain>, ErrorList>> Handle(FilterEngine request, CancellationToken cancellationToken)
 		{
-			//Result<List<FilterEngineDomain>> result =
-			return _productRepository.GetFromFilterEngine(request.ProductNameIn, request.ProductVersionNameIn, request.MinSize,
-				request.MaxSize);
+			return _productRepository.GetFromFilterEngine(request.ProductNameIn
+				, request.ProductVersionNameIn
+				, request.MinSize
+				, request.MaxSize
+				);
 		}
 	}
 }

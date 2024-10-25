@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SoftPlex.Domain.Shared;
 
 namespace SoftPlex.Application.CQRS.ProductVersion.Commands
 {
-	public class RemoveProductVersionByIdHandler : IRequestHandler<RemoveProductVersionById, Result>
+	public class RemoveProductVersionByIdHandler : IRequestHandler<RemoveProductVersionById, Result<bool, ErrorList>>
 	{
 		private readonly IProductRepository _productRepository;
 
@@ -19,7 +20,7 @@ namespace SoftPlex.Application.CQRS.ProductVersion.Commands
 			_productRepository = productRepository;
 		}
 
-		public async Task<Result> Handle(RemoveProductVersionById request, CancellationToken cancellationToken)
+		public async Task<Result<bool, ErrorList>> Handle(RemoveProductVersionById request, CancellationToken cancellationToken)
 		{
 			return await _productRepository.RemoveProductVersionByIdAsync(request.Id, cancellationToken);
 		}

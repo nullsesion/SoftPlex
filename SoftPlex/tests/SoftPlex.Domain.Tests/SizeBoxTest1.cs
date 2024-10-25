@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using SoftPlex.Domain.Shared;
 using SoftPlex.Domain.ValueObject;
 
 namespace SoftPlex.Domain.Tests
@@ -12,9 +13,9 @@ namespace SoftPlex.Domain.Tests
 			
 
 			//act
-			Result<SizeBox> sizeBoxTryCreated0 = SizeBox.Create(1,1,1);
-			Result<SizeBox> sizeBoxTryCreated1 = SizeBox.Create(10.2m, 10.2m, 10.2m);
-			Result<SizeBox> sizeBoxTryCreated2 = SizeBox.Create(100, 5, 3);
+			Result<SizeBox, ErrorList> sizeBoxTryCreated0 = SizeBox.Create(1,1,1);
+			Result<SizeBox, ErrorList> sizeBoxTryCreated1 = SizeBox.Create(10.2m, 10.2m, 10.2m);
+			Result<SizeBox, ErrorList> sizeBoxTryCreated2 = SizeBox.Create(100, 5, 3);
 
 			//assert
 			Assert.True(sizeBoxTryCreated0.IsSuccess);
@@ -29,9 +30,9 @@ namespace SoftPlex.Domain.Tests
 
 
 			//act
-			Result<SizeBox> sizeBoxTryCreated1 = SizeBox.Create(-1, 10, 10);
-			Result<SizeBox> sizeBoxTryCreated2 = SizeBox.Create(10, -1, 10);
-			Result<SizeBox> sizeBoxTryCreated3 = SizeBox.Create(10, 10, -1);
+			Result<SizeBox, ErrorList> sizeBoxTryCreated1 = SizeBox.Create(-1, 10, 10);
+			Result<SizeBox, ErrorList> sizeBoxTryCreated2 = SizeBox.Create(10, -1, 10);
+			Result<SizeBox, ErrorList> sizeBoxTryCreated3 = SizeBox.Create(10, 10, -1);
 
 			//assert
 			Assert.True(sizeBoxTryCreated1.IsFailure);
@@ -46,16 +47,16 @@ namespace SoftPlex.Domain.Tests
 
 
 			//act
-			Result<SizeBox> sizeBoxTryCreated0 = SizeBox.Create(0, 0, 0);
-			Result<SizeBox> sizeBoxTryCreated1 = SizeBox.Create(0, 10, 10);
-			Result<SizeBox> sizeBoxTryCreated2 = SizeBox.Create(10, 0, 10);
-			Result<SizeBox> sizeBoxTryCreated3 = SizeBox.Create(10, 10, 0);
+			Result<SizeBox, ErrorList> sizeBoxTryCreated0 = SizeBox.Create(0, 0, 0);
+			Result<SizeBox, ErrorList> sizeBoxTryCreated1 = SizeBox.Create(0, 10, 10);
+			Result<SizeBox, ErrorList> sizeBoxTryCreated2 = SizeBox.Create(10, 0, 10);
+			Result<SizeBox, ErrorList> sizeBoxTryCreated3 = SizeBox.Create(10, 10, 0);
 
 			//assert
 			Assert.True(sizeBoxTryCreated0.IsFailure);
-			//Assert.True(sizeBoxTryCreated1.IsFailure);
-			//Assert.True(sizeBoxTryCreated2.IsFailure);
-			//Assert.True(sizeBoxTryCreated3.IsFailure);
+			Assert.True(sizeBoxTryCreated1.IsFailure);
+			Assert.True(sizeBoxTryCreated2.IsFailure);
+			Assert.True(sizeBoxTryCreated3.IsFailure);
 		}
 	}
 }

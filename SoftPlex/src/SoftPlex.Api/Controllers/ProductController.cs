@@ -15,6 +15,7 @@ using SoftPlex.Application.CQRS.ProductVersion.Commands;
 using SoftPlex.Contracts.Request;
 using SoftPlex.Contracts.Response;
 using Newtonsoft.Json;
+using SoftPlex.Domain.Shared;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,7 +38,7 @@ namespace SoftPlex.Api.Controllers
 		[HttpGet]
 		public async Task<IResult> Get(int page, int pageSize, CancellationToken cancellationToken)
 		{
-			Result<IReadOnlyList<Product>> result = await _mediator.Send(new GetProducts()
+			var result = await _mediator.Send(new GetProducts()
 			{
 				Page = page, PageSize = pageSize
 			}, cancellationToken);
@@ -59,7 +60,7 @@ namespace SoftPlex.Api.Controllers
 		[HttpGet("{id}")]
 		public async Task<IResult> Get(Guid id, CancellationToken cancellationToken)
 		{
-			Result<Product> result = await _mediator.Send(new GetProductById()
+			var result = await _mediator.Send(new GetProductById()
 			{
 				Id = id
 			}, cancellationToken);
@@ -79,12 +80,12 @@ namespace SoftPlex.Api.Controllers
 			foreach (RequestProductVersion item in value.ListRequestProductVersion)
 			{
 				Guid productVersionId = item.Id == Guid.Empty?Guid.NewGuid() : item.Id;
-				Result<SizeBox> trySizeBox = SizeBox.Create(item.Width, item.Height, item.Length);
+				Result<SizeBox, ErrorList> trySizeBox = SizeBox.Create(item.Width, item.Height, item.Length);
 				if(trySizeBox.IsFailure)
 					continue;
 
 				//item
-				Result<ProductVersion> tryProductVersion = ProductVersion.Create(
+				Result<ProductVersion, ErrorList> tryProductVersion = ProductVersion.Create(
 						productVersionId
 						, productGuid
 						, item.Name
@@ -105,7 +106,7 @@ namespace SoftPlex.Api.Controllers
 				ProductVersions = productVersions,
 			};
 
-			Result result = await _mediator.Send(createOrUpdateProduct, cancellationToken);
+			var result = await _mediator.Send(createOrUpdateProduct, cancellationToken);
 			if (result.IsFailure)
 				return Results.BadRequest(result.Error); 
 

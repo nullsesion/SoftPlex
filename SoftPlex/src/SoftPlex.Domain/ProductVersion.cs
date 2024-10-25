@@ -1,12 +1,12 @@
 ﻿using SoftPlex.Domain.ValueObject;
 using CSharpFunctionalExtensions;
+using SoftPlex.Domain.Shared;
 
 namespace SoftPlex.Domain
 {
 	public class ProductVersion
 	{
 		public const int MAX_TITLE_LENGHT = 255;
-		public const int MAX_DESCRIPTION_LENGHT = 1024;
 
 		public Guid Id { get; private set; }
 		public Guid ProductId { get; private set; }
@@ -32,7 +32,7 @@ namespace SoftPlex.Domain
 			CreatingDate = creatingDate;
 		}
 
-		public static Result<ProductVersion> Create(
+		public static Result<ProductVersion, ErrorList> Create(
 			Guid productVersionId
 			, Guid productId
 			, string name
@@ -41,16 +41,25 @@ namespace SoftPlex.Domain
 			, DateTime creatingDate
 			)
 		{
+			ErrorList errorList = new ErrorList();
 			if (string.IsNullOrWhiteSpace(name))
-				return Result.Failure<ProductVersion>("name must not be empty");
+				errorList.AddError(new Error("name must not be empty",ErrorType.Validation, "Name"));
+				
 
 			if (name.Length >= MAX_TITLE_LENGHT)
-				return Result.Failure<ProductVersion>("maximum name length exceeded");
+				errorList.AddError(new Error("maximum name length exceeded", ErrorType.Validation, "Name"));
 
-			if (description is not null && description.Length >= MAX_DESCRIPTION_LENGHT)
-				return Result.Failure<ProductVersion>("maximum description length exceeded");
+			if (name.Contains("404"))
+				errorList.AddError(new Error("name contains 404", ErrorType.Validation, "Name"));
 
-			return Result.Success(new ProductVersion(
+
+			if (sizeBox is null)
+				errorList.AddError(new Error("invalid Size", ErrorType.Validation, "SizeBox"));
+
+			if (errorList.IsError)
+				return Result.Failure<ProductVersion, ErrorList>(errorList);
+
+			return Result.Success<ProductVersion, ErrorList>(new ProductVersion(
 				productVersionId
 				, productId
 				, name
