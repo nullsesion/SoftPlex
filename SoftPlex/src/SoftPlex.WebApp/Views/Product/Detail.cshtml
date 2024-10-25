@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using SoftPlex.Contracts
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SoftPlex.Contracts.Response
 @model SoftPlex.Contracts.Response.ResponseProduct
 
 @{
@@ -23,9 +24,8 @@
 </style>
 <table>
 	<tr>
-		@*
+
 		<th>Id</th>
-		*@
 		<th>Name</th>
 		<th>Description</th>
 		<th>ProductVersions</th>
@@ -33,11 +33,15 @@
 			if (User.Identity.IsAuthenticated)
 			{
 				<th>Actions</th>
-				<a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Logout">Logout</a>
 			}
 		}
-
 	</tr>
-	<partial name="_ResponseProduct" model="Model" />
-	
+
+	@{
+		List<ResponseProduct> item = new List<ResponseProduct>();
+		item.Add(Model);
+	}
+	<partial name="_ResponseProduct" model="item" />
+		
+
 </table>

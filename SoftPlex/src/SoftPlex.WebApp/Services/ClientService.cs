@@ -15,6 +15,7 @@ namespace SoftPlex.WebApp.Services
 		private const string DELETE_PRODUCTVERSION_POINT = "https://localhost:7044/api/ProductVersion/"; //d28a85de-88a7-40f8-898f-53784a91b036
 		private const string GET_FILTER_POINT = "https://localhost:7044/api/FilterEngine/"; //https://localhost:7044/api/FilterEngine?productNameIn=%D0%94%D0%B5&productVersionNameIn=%D1%81%D1%82%D0%B0&minSize=0&maxSize=10000000000000000
 		private const string POST_CREATE_POINT = "https://localhost:7044/api/Product";
+		//private const string POST_CREATE_POINT = "https://webhook.site/091dc984-a9b5-40bf-bea0-44a9520129ab";
 		//curl -X 'POST' 'https://localhost:7044/api/Product' -H 'accept: */*' -H 'Content-Type: application/json' -d '"string"'
 
 		public ClientService()
@@ -73,10 +74,12 @@ namespace SoftPlex.WebApp.Services
 			await _client.DeleteAsync(DELETE_PRODUCTVERSION_POINT + id);
 		}
 
-		public async Task CreateProduct()
+		public async Task CreateProduct(string value)
 		{
-			string rawJson = """{"id": "00000000-0000-0000-0000-000000000000","name": "product1","description": "product1 description","listRequestProductVersion": [{"id": "00000000-0000-0000-0000-000000000000","productId": "00000000-0000-0000-0000-000000000000","name": "product1 v1","description": "product1 v1 description","width": 100,"height": 100,"length": 100},{"id": "00000000-0000-0000-0000-000000000000","productId": "00000000-0000-0000-0000-000000000000","name": "product1 v2","description": "product1 v2 description","width": 100,"height": 100,"length": 100},{"id": "00000000-0000-0000-0000-000000000000","productId": "00000000-0000-0000-0000-000000000000","name": "product1 v3","description": "product1 v3 description","width": 100,"height": 100,"length": 100}]}""";
-			await _client.PostAsync(POST_CREATE_POINT, new StringContent(rawJson));
+			var request = new HttpRequestMessage(HttpMethod.Post, POST_CREATE_POINT);
+			var content = new StringContent(value, null, "application/json");
+			request.Content = content;
+			var response = await _client.SendAsync(request);
 		}
 
 	}

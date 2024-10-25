@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using SoftPlex.Domain.Shared;
 
 namespace SoftPlex.Domain
 {
@@ -26,14 +27,14 @@ namespace SoftPlex.Domain
 		public void UpdateProductVersions(List<ProductVersion> productVersions) 
 			=> _productVersions = productVersions;
 
-		
-		public static Result<Product> Create(Guid Id
+		//todo add ,Error
+		public static Result<Product> Create(Guid Id 
 			, string name
 			, string? description
 			, IEnumerable<ProductVersion>? productVersions)
 		{
 			if (string.IsNullOrWhiteSpace(name))
-				return Result.Failure<Product>("name must not be empty");
+				return Result.Failure<Product>("name must not be empty"); //, Error
 
 			if (name.Length > MAX_NAME_LENGHT)
 				return Result.Failure<Product>("maximum name length exceeded");

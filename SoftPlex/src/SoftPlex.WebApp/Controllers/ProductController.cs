@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using SoftPlex.Contracts.Request;
 using SoftPlex.Contracts.Response;
 using SoftPlex.WebApp.Services;
 
@@ -44,14 +46,22 @@ namespace SoftPlex.WebApp.Controllers
 			return RedirectToAction("Index");
 		}
 
-		[Authorize]
+
+		/*
 		[HttpPost]
-		public async Task<IResult> CreateProduct()
+		public async Task<IResult> CreateProduct([FromBody] RequestProduct value)
 		{
-			//todo: add async
-			//await _clientService.CreateProduct();
-			
+			string json = JsonConvert.SerializeObject(value);
+			await _clientService.CreateProduct(json);
 			return Results.Json(new {success = "ok"});
+		}
+		*/
+		[HttpPost]
+		public async Task<IResult> CreateProduct([FromBody] RequestProduct value)
+		{
+			string json = JsonConvert.SerializeObject(value);
+			await _clientService.CreateProduct(json);
+			return Results.Json(new { success = "ok" });
 		}
 	}
 }

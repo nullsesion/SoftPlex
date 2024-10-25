@@ -85,12 +85,12 @@ namespace SoftPlex.Api.Controllers
 
 				//item
 				Result<ProductVersion> tryProductVersion = ProductVersion.Create(
-					productVersionId
-					, productGuid
-					, item.Name
-					, item.Description
-					, trySizeBox.Value
-					,  DateTime.Now
+						productVersionId
+						, productGuid
+						, item.Name
+						, item.Description
+						, trySizeBox.Value
+						,  DateTime.Now
 					);
 
 				if(tryProductVersion.IsSuccess)
@@ -109,42 +109,6 @@ namespace SoftPlex.Api.Controllers
 			if (result.IsFailure)
 				return Results.BadRequest(result.Error); 
 
-
-			/*
-			Guid pid = new Guid("87efbc55-6c4a-42a0-a1e4-ce8582a27977");
-			
-			Result result = await _mediator.Send(new CreateOrUpdateProduct()
-			{
-				Id = pid
-				, Name = "32423432424"
-				, Description = "2343242424"
-				, ProductVersions = new List<ProductVersion>()
-				{
-					ProductVersion.Create(
-						Guid.NewGuid()
-						, pid
-						, "sdsdsdsd"
-						, "asasasas"
-						, SizeBox.Create(100, 1000, 100).Value
-						, DateTime.Now
-					).Value
-					, ProductVersion.Create(
-						Guid.NewGuid()
-						, pid
-						, "dsfdsfsdf"
-						, "adsfdsfsasasas"
-						, SizeBox.Create(100, 1000, 100).Value
-						, DateTime.Now
-					).Value
-				}
-			}, cancellationToken);
-
-			if (result.IsSuccess)
-			{
-				return Results.Json(new { success = "ok" });
-			}
-			return Results.BadRequest(result.Error);
-			*/
 			return Results.Json(new { success = "ok" });
 		}
 

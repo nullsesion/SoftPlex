@@ -29,6 +29,11 @@ body {
     display: table-row;
 }
 
+.table_add_product__table th,
+.table_add_product__table td {
+    vertical-align: top;
+}
+
 .login_form__row_label,
 .login_form__row_input_valid,
 .login_form__row_input,
@@ -41,4 +46,8 @@ body {
 }
 .login_form__row_input_valid {
     color: red;
+}
+
+.description_product__accordion {
+    min-height: 600px;
 }

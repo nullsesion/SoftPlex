@@ -1,71 +1,52 @@
 ﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
-
 // Write your JavaScript code.
-/*
-	jQuery(function () {
-		jQuery(".js-button_add").click(function () {
-	        //".js-add-edit-product"
-            jQuery( "#dialog-confirm" ).dialog({
-                  resizable: true,
-                  height: "auto",
-                  width: 400,
-                  modal: true,
-                  buttons: {
-                    "Delete all items": function() {
-                          jQuery( this ).dialog( "close" );
-                    },
-                    Cancel: function() {
-                        jQuery( this ).dialog( "close" );
-                    }
-                  }
-                });
-		});
-    });
-*/
+
 $(function () {
-    var dialog, form,
-
-    // From https://html.spec.whatwg.org/multipage/input.html#e-mail-state-%28type=email%29
-    emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-    name      = $("#name"),
-    email     = $("#email"),
-    password  = $("#password"),
-    allFields = $([]).add(name).add(email).add(password),
-    tips      = $(".validateTips");
-
-    function updateTips(t) {
-        tips
-            .text(t)
-            .addClass("ui-state-highlight");
-        setTimeout(function () {
-            tips.removeClass("ui-state-highlight", 1500);
-        }, 500);
-    }
-
-    function checkLength(o, n, min, max) {
-        if (o.val().length > max || o.val().length < min) {
-            o.addClass("ui-state-error");
-            updateTips("Length of " + n + " must be between " +
-                min + " and " + max + ".");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    function checkRegexp(o, regexp, n) {
-        if (!(regexp.test(o.val()))) {
-            o.addClass("ui-state-error");
-            updateTips(n);
-            return false;
-        } else {
-            return true;
-        }
-    }
+    var dialog, form;
 
     function addProduct() {
-        alert("blablabla");
+        var listRequestProductVersion = [];
+
+        var name_product_id = $("#dialog-form")
+            .find('[name="name_product_id"]').val();
+
+        $("#dialog-form")
+            .find(".js-product-version")
+            .each(function (i, e) {
+                listRequestProductVersion.push({
+                    "id": $(e).find('[name="productversion_guid"]').val(), 
+                    "productId": name_product_id,
+                    "name": $(e).find('[name="name"]').val(),
+                    "description": $(e).find('[name="description"]').val(),
+                    "width": $(e).find('[name="height"]').val() * 1,
+                    "height": $(e).find('[name="width"]').val() * 1,
+                    "length": $(e).find('[name="length"]').val() * 1
+                });
+            });
+        var d = JSON.stringify({
+            "id": name_product_id,
+            "name": $("#dialog-form").find('[name="name_product"]').val(),
+            "description": $("#dialog-form").find('[name="description_product"]').val(),
+            "listRequestProductVersion": listRequestProductVersion
+        });
+
+        var settings = {
+            "url": "/Product/CreateProduct",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/json",
+            },
+            "data": d,
+        };
+
+        console.log(settings)
+
+        $.ajax(settings).done(function (response) {
+            //add добавление ошибок
+            console.log(response);
+        });
     }
 
     dialog = $("#dialog-form").dialog({
@@ -80,8 +61,8 @@ $(function () {
             }
         },
         close: function () {
-            form[0].reset();
-            allFields.removeClass("ui-state-error");
+            $("#js-add-product").trigger("reset");
+            //allFields.removeClass("ui-state-error");
         }
     });
 
@@ -91,8 +72,36 @@ $(function () {
     });
 
     $(".js-button_add").on("click", function () {
+        var htmlForm = $("#dialog-form__into")
+            .html();
+
+        $("#dialog-form")
+            .html(htmlForm);
+
+        $("#dialog-form .js-accordion").accordion();
+
         dialog.dialog("open");
     });
 
-    $(".js-accordion").accordion();
+    $(".js-button_add-res__button").on("click", function () {
+        var htmlForm = $(this)
+            .closest(".js-button_add-res__wrapp")
+            .find(".js-button_add-res__form")
+            .html();
+
+        $("#dialog-form")
+            .html(htmlForm);
+
+        $("#dialog-form .js-accordion").accordion();
+
+        dialog.dialog("open");
+    });
+    // "#dialog-form"
+    // ".js-add-product"
+    /*
+        js-button_add-res__wrapp
+        js-button_add-res__button
+        js-button_add-res__form
+    */
+
 });

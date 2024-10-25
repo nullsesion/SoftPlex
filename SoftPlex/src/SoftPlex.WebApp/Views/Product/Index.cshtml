@@ -41,9 +41,7 @@
 			}
 		</tr>
 	}
+	
+	<partial name="_ResponseProduct" model="Model" />
 
-	@foreach (ResponseProduct item in Model)
-	{
-		<partial name="_ResponseProductMain" model="item"/>
-	}
 </table>

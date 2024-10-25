@@ -1,0 +1,96 @@
+﻿@model SoftPlex.Contracts.Response.ResponseProduct
+
+<table class="table_add_product__table">
+	<tr>
+		<td class="c1"><b>Product info</b></td>
+		<td class="c2"><b>Product versions info</b> </td>
+	</tr>
+	<tr>
+		<td class="c1">
+			<table>
+				<tr>
+					<td><label for="name">Name</label></td>
+					<td>
+						<input type="text" name="name_product_id" value="@(Model is null?Guid.NewGuid():Model.Id)">
+						<input type="text" name="name_product" value="@(Model is null?"":Model.Name)" class="text ui-widget-content ui-corner-all">
+					</td>
+				</tr>
+				<tr>
+					<td><label for="Description">Description</label></td>
+					<td><textarea cols="" rows="" name="description_product">@(Model is null ? "" : Model.Description)</textarea></td>
+				</tr>
+			</table>
+		</td>
+		<td class="c2">
+			<div class="js-accordion description_product__accordion">
+				@if (Model is not null && Model.ProductVersions is not null && Model.ProductVersions.Count() > 0)
+				{
+					@foreach (var productVersion in @Model.ProductVersions)
+					{
+						<h3>Product version (exist)</h3>
+						<div class="js-product-version">
+							<table>
+								<tr>
+									<td><label for="Description">Name</label></td>
+									<td>
+										<input type="text" name="productversion_guid" value="@productVersion.Id">
+										<input type="text" name="name" value="@productVersion.Name" class="text ui-widget-content ui-corner-all">
+									</td>
+								</tr>
+								<tr>
+									<td><label for="Description">Description</label></td>
+									<td><textarea cols="" rows="" name="description">@productVersion.Description</textarea></td>
+								</tr>
+								<tr>
+									<td><label for="Height">Height</label></td>
+									<td><input type="text" name="height" value="@productVersion.SizeBox.Height" class="text ui-widget-content ui-corner-all"></td>
+								</tr>
+								<tr>
+									<td><label for="Width">Width</label></td>
+									<td><input type="text" name="width" value="@productVersion.SizeBox.Width" class="text ui-widget-content ui-corner-all"></td>
+								</tr>
+								<tr>
+									<td><label for="Length">Length</label></td>
+									<td><input type="text" name="length" value="@productVersion.SizeBox.Length" class="text ui-widget-content ui-corner-all"></td>
+								</tr>
+							</table>
+						</div>
+					}
+				}
+				@for (int i = 1; i < 5; i++)
+				{
+					<h3>Product version (new)</h3>
+					<div class="js-product-version">
+						<table>
+							<tr>
+								<td><label for="Description">Name</label></td>
+								<td>
+									<input type="text" name="productversion_guid" value="@Guid.NewGuid()">
+									<input type="text" name="name" value="" class="text ui-widget-content ui-corner-all">
+								</td>
+							</tr>
+							<tr>
+								<td><label for="Description">Description</label></td>
+								<td><textarea cols="" rows="" name="description"></textarea></td>
+							</tr>
+							<tr>
+								<td><label for="Height">Height</label></td>
+								<td><input type="text" name="height" value="" class="text ui-widget-content ui-corner-all"></td>
+							</tr>
+							<tr>
+								<td><label for="Width">Width</label></td>
+								<td><input type="text" name="width" value="" class="text ui-widget-content ui-corner-all"></td>
+							</tr>
+							<tr>
+								<td><label for="Length">Length</label></td>
+								<td><input type="text" name="length" value="" class="text ui-widget-content ui-corner-all"></td>
+							</tr>
+						</table>
+					</div>
+				}
+			</div>
+		</td>
+	</tr>
+</table>
+<!-- Allow form submission with keyboard without duplicating the dialog button -->
+<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
