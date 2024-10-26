@@ -6,16 +6,12 @@ using SoftPlex.Application.CQRS.Products.Commands;
 using SoftPlex.Application.CQRS.Products.Queries;
 using SoftPlex.Domain;
 using SoftPlex.Domain.ValueObject;
-using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading;
 using IResult = Microsoft.AspNetCore.Http.IResult;
-using SoftPlex.Application.CQRS.ProductVersion.Commands;
 using SoftPlex.Contracts.Request;
 using SoftPlex.Contracts.Response;
 using Newtonsoft.Json;
 using SoftPlex.Domain.Shared;
+using SoftPlex.Application.DtoModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -42,18 +38,20 @@ namespace SoftPlex.Api.Controllers
 			{
 				Page = page, PageSize = pageSize
 			}, cancellationToken);
-			if (result.IsSuccess)
+			if (result.IsFailure)
 			{
-				
-				IEnumerable<ResponseProduct> resp = result.Value
-					.Select(x => _mapper.Map<ResponseProduct>(x))
-					;
+				ErrorList? errs = result.Error;
+				if(errs is not null)
+					return Results.BadRequest(errs);
 
-				return Results.Json(resp);
+				return Results.BadRequest(new Error("unknown error",ErrorType.ServerError,null,null));
 			}
 
-			//todo: разделить серверные и пользовательские ошибки
-			return Results.BadRequest(result.Error);
+			//if (result.IsSuccess) { }
+			IEnumerable<ResponseProduct> resp = result.Value
+					.Select(x => _mapper.Map<ResponseProduct>(x))
+				;
+			return Results.Json(resp);
 		}
 
 		// GET api/<ProductController>/5
@@ -75,9 +73,34 @@ namespace SoftPlex.Api.Controllers
 		[HttpPost]
 		public async Task<IResult> Post([FromBody] RequestProduct value, CancellationToken cancellationToken)
 		{
+			RequestProductDTO productDTO = _mapper.Map<RequestProductDTO>(value);
+
+			CreateOrUpdateProduct createOrUpdateProduct = new CreateOrUpdateProduct()
+			{
+				Product = productDTO
+			};
+
+			
+			var result = await _mediator.Send(createOrUpdateProduct, cancellationToken);
+			if (result.IsFailure)
+				return Results.BadRequest(result.Error);
+			
+			return Results.Json(new { success = "ok" });
+
+			/*
+			RequestProductVersion t = value.ProductVersions.ToList().First();
+			ProductVersionDto? res = _mapper.Map<ProductVersionDto>(t);
+			return Results.Json(res);
+			*/
+			/*
+			ProductVersionDto
+			RequestProductVersion
+			*/
+
+			/*
 			Guid productGuid = value.Id == Guid.Empty ? Guid.NewGuid() : value.Id;
 			List<ProductVersion> productVersions = new List<ProductVersion>();
-			foreach (RequestProductVersion item in value.ListRequestProductVersion)
+			foreach (RequestProductVersion item in value.ProductVersions)
 			{
 				Guid productVersionId = item.Id == Guid.Empty?Guid.NewGuid() : item.Id;
 				Result<SizeBox, ErrorList> trySizeBox = SizeBox.Create(item.Width, item.Height, item.Length);
@@ -110,6 +133,7 @@ namespace SoftPlex.Api.Controllers
 			if (result.IsFailure)
 				return Results.BadRequest(result.Error); 
 
+			*/
 			return Results.Json(new { success = "ok" });
 		}
 
@@ -123,4 +147,5 @@ namespace SoftPlex.Api.Controllers
 			}, cancellationToken);
 		}
 	}
+	
 }

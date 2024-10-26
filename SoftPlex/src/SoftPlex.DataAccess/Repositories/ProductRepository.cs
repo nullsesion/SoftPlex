@@ -81,7 +81,7 @@ namespace SoftPlex.DataAccess.Repositories
 			catch (Exception e)
 			{
 				ErrorList errorList = new ErrorList();
-				errorList.AddError(new Error(e.Message, ErrorType.ServerError, null));
+				errorList.AddError(new Error(e.Message, ErrorType.ServerError, null,product.Id));
 				return Result.Failure<bool, ErrorList>(errorList); //tryCreateProduct.Error
 			}
 
@@ -105,7 +105,7 @@ namespace SoftPlex.DataAccess.Repositories
 			catch (Exception e)
 			{
 				ErrorList errorList = new ErrorList();
-				errorList.AddError(new Error(e.Message, ErrorType.ServerError, null));
+				errorList.AddError(new Error(e.Message, ErrorType.ServerError, null,Id));
 				return Result.Failure<bool, ErrorList>(errorList); 
 			}
 			return Result.Success<bool, ErrorList>(true);
@@ -126,7 +126,7 @@ namespace SoftPlex.DataAccess.Repositories
 			catch (Exception e)
 			{
 				ErrorList errorList = new ErrorList();
-				errorList.AddError(new Error(e.Message, ErrorType.ServerError, null));
+				errorList.AddError(new Error(e.Message, ErrorType.ServerError, null,Id));
 				return Result.Failure<bool, ErrorList>(errorList);
 			}
 			return Result.Success<bool, ErrorList>(true);
@@ -144,7 +144,7 @@ namespace SoftPlex.DataAccess.Repositories
 				.FirstOrDefault(x => x.Id == Id);
 			if (productEntityFromDb == null)
 			{
-				errorList.AddError(new Error($"Not Found by id {Id}",ErrorType.NotFound,null));
+				errorList.AddError(new Error($"Not Found by id {Id}",ErrorType.NotFound,null, null));
 				return Result.Failure<Product, ErrorList>(errorList);
 			}
 			else
@@ -164,7 +164,7 @@ namespace SoftPlex.DataAccess.Repositories
 
 				if (tryCreateProduct.IsFailure)
 				{
-					errorList.AddError(new Error($"Server Error in GetProductByIdAsync", ErrorType.ServerError, null));
+					errorList.AddError(new Error($"Server Error in GetProductByIdAsync", ErrorType.ServerError, null, Id));
 					return Result.Failure<Product, ErrorList>(errorList); //tryCreateProduct.Error
 				}
 					

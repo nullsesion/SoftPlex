@@ -43,18 +43,18 @@ namespace SoftPlex.Domain
 		{
 			ErrorList errorList = new ErrorList();
 			if (string.IsNullOrWhiteSpace(name))
-				errorList.AddError(new Error("name must not be empty",ErrorType.Validation, "Name"));
+				errorList.AddError(new Error("must not be empty",ErrorType.Validation, nameof(Name),productId));
 				
 
 			if (name.Length >= MAX_TITLE_LENGHT)
-				errorList.AddError(new Error("maximum name length exceeded", ErrorType.Validation, "Name"));
+				errorList.AddError(new Error("maximum length exceeded", ErrorType.Validation, nameof(Name), productId));
 
 			if (name.Contains("404"))
-				errorList.AddError(new Error("name contains 404", ErrorType.Validation, "Name"));
+				errorList.AddError(new Error("contains 404", ErrorType.Validation, nameof(Name), productId));
 
 
 			if (sizeBox is null)
-				errorList.AddError(new Error("invalid Size", ErrorType.Validation, "SizeBox"));
+				errorList.AddError(new Error("invalid Size", ErrorType.Validation, nameof(SizeBox), productId));
 
 			if (errorList.IsError)
 				return Result.Failure<ProductVersion, ErrorList>(errorList);
