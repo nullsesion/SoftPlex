@@ -4,7 +4,7 @@ services:
   webapp:
     build: 
       context: ../
-      dockerfile: ./docker/dotnet/Dockerfile
+      dockerfile: ./docker/dotnetwebapp/Dockerfile
     pull_policy: always
     container_name: webapp_container
     networks:
@@ -21,7 +21,7 @@ services:
       context: ../
       dockerfile: ./docker/dotnet/Dockerfile
     pull_policy: always
-    container_name: webapi
+    container_name: webapi_container
     networks:
       - postgres
     environment:

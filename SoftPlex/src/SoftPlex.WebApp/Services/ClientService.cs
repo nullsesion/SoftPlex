@@ -21,7 +21,17 @@ namespace SoftPlex.WebApp.Services
 		public ClientService(IConfiguration config)
 		{
 			_config = config;
-			_client = new HttpClient();
+
+			var handler = new HttpClientHandler();
+			handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+			handler.ServerCertificateCustomValidationCallback =
+				(httpRequestMessage, cert, cetChain, policyErrors) =>
+				{
+					return true;
+				};
+
+			_client = new HttpClient(handler);
+			//_client.IgnoreSslCertificateInfo();
 
 			var section = config.GetSection("AppSettings");
 			var key = "ApiHost";
