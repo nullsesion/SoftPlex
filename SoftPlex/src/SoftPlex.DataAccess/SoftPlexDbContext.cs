@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SoftPlex.Application.Interfaces;
 using SoftPlex.DataAccess.Configuration;
+using SoftPlex.DataAccess.Entities;
 using SoftPlex.Domain;
 
 namespace SoftPlex.DataAccess
@@ -11,7 +12,13 @@ namespace SoftPlex.DataAccess
 	{
 
 		private readonly IConfiguration _configuration;
-		public SoftPlexDbContext(IConfiguration configuration) => _configuration = configuration;
+		public SoftPlexDbContext(IConfiguration configuration)
+		{
+			_configuration = configuration;
+
+			this.Database.Migrate();
+			this.Database.EnsureCreatedAsync();
+		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -21,12 +28,18 @@ namespace SoftPlex.DataAccess
 				.UseLoggerFactory(CreateLoggerFactory)
 				.EnableSensitiveDataLogging()
 				;
+
+			/*
+			dbContext.Database.Migrate();
+			dbContext.Database.EnsureCreatedAsync();
+			*/
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.ApplyConfiguration(new ProductConfig());
-			modelBuilder.ApplyConfiguration(new ProductVersionConfig());
+			modelBuilder.ApplyConfiguration(new ProductEntityConfig());
+			modelBuilder.ApplyConfiguration(new ProductVersionEntityConfig());
+			modelBuilder.Entity<FilterEngineEntity>().HasNoKey().ToView(null);
 
 			base.OnModelCreating(modelBuilder);
 		}
@@ -34,8 +47,9 @@ namespace SoftPlex.DataAccess
 		private static readonly ILoggerFactory CreateLoggerFactory
 			= LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-		public DbSet<Product> Products { get; set; }
-		public DbSet<ProductVersion> ProductVersions { get; set; }
+		public DbSet<ProductEntity> Products { get; set; }
+		public DbSet<ProductVersionEntity> ProductVersions { get; set; }
+		public DbSet<FilterEngineEntity> filterEngineEntity { get; set; }
 
 	}
 }

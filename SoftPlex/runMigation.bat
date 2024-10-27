@@ -1,0 +1,1 @@
+dotnet ef database update -s .\src\SoftPlex.Api -p .\src\SoftPlex.DataAccess
