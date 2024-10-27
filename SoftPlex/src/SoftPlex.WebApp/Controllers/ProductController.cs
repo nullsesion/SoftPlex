@@ -3,7 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SoftPlex.Contracts.Request;
 using SoftPlex.Contracts.Response;
+using SoftPlex.Shared.Response;
 using SoftPlex.WebApp.Services;
+using System.Net.Mime;
+using System.Security.Principal;
+using System.Text;
 
 namespace SoftPlex.WebApp.Controllers
 {
@@ -46,22 +50,33 @@ namespace SoftPlex.WebApp.Controllers
 			return RedirectToAction("Index");
 		}
 
-
-		/*
+		
 		[HttpPost]
 		public async Task<IResult> CreateProduct([FromBody] RequestProduct value)
 		{
-			string json = JsonConvert.SerializeObject(value);
-			await _clientService.CreateProduct(json);
-			return Results.Json(new {success = "ok"});
-		}
-		*/
-		[HttpPost]
-		public async Task<IResult> CreateProduct([FromBody] RequestProduct value)
-		{
-			string json = JsonConvert.SerializeObject(value);
-			await _clientService.CreateProduct(json);
-			return Results.Json(new { success = "ok" });
+			RequestProduct request = value;
+			request.ProductVersions = request.ProductVersions
+				.Where(x =>
+					!string.IsNullOrWhiteSpace(x.Name)
+					|| !string.IsNullOrWhiteSpace(x.Description)
+					|| x.Width > 0 || x.Height > 0 || x.Length > 0
+				)
+				.ToList();
+			;
+			
+			string json = JsonConvert.SerializeObject(request);
+			(bool IsSuccessStatusCode, string Content) res = await _clientService.CreateProduct(json);
+			
+			if (res.IsSuccessStatusCode)
+			{
+				return Results.Json(new { success = "ok", isError = false, url = Url.Action("Index") });
+			}
+			else
+			{
+				//Content
+				ResponseHasErrors? responseHasErrors = JsonConvert.DeserializeObject<ResponseHasErrors>(res.Content);
+				return Results.Json(responseHasErrors);
+			}
 		}
 	}
 }

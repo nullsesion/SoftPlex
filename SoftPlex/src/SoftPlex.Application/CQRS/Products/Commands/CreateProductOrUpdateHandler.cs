@@ -2,8 +2,11 @@
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using SoftPlex.Application.DtoModels;
 using SoftPlex.Application.Interfaces;
+using SoftPlex.Domain;
 using SoftPlex.Domain.Shared;
+using SoftPlex.Domain.ValueObject;
 
 namespace SoftPlex.Application.CQRS.Products.Commands
 {
@@ -41,28 +44,46 @@ namespace SoftPlex.Application.CQRS.Products.Commands
 				return errorList;
 			}
 
-			return Result.Success<bool, ErrorList>(true);
-			/*
-			ErrorList errorList = new ErrorList();
-			if (request.Id == Guid.Empty)
-				request.Id = Guid.NewGuid();
-
+			List<Domain.ProductVersion> listPv = new List<Domain.ProductVersion>();
+			foreach (ProductVersionDto item in request.Product.ProductVersions)
+			{
+				Result<SizeBox, ErrorList> trysizeBox = SizeBox.Create(item.Width, item.Height, item.Length);
+				if (trysizeBox.IsFailure)
+					continue;
+				Result<Domain.ProductVersion, ErrorList> res = Domain.ProductVersion.Create(
+					item.Id
+					, item.ProductId
+					, item.Name
+					, item.Description
+					, trysizeBox.Value
+					, DateTime.Now);
+				if(res.IsSuccess)
+					listPv.Add(res.Value);
+			}
 			Result<Product, ErrorList> productTryCreate = Product.Create(
-				request.Id
-				, request.Name
-				, request.Description  
-				, request.ProductVersions
-				);
+				(request.Product.Id == Guid.Empty? Guid.NewGuid(): request.Product.Id)
+				, request.Product.Name
+				, request.Product.Description
+				, listPv
+			);
 
 			if (productTryCreate.IsFailure)
 			{
 				errorList.AddErrors(productTryCreate.Error.Errors);
 				return Result.Failure<bool, ErrorList>(errorList);//
 			}
-				
-			
-			return await _productRepository.InsertOrUpdateProductAsync(productTryCreate.Value, cancellationToken);
-			*/
+
+
+			Result<bool, ErrorList> resultDb = await _productRepository.InsertOrUpdateProductAsync(productTryCreate.Value, cancellationToken);
+
+			if (resultDb.IsSuccess)
+			{
+				return Result.Success<bool, ErrorList>(true);
+			}
+			else
+			{
+				return Result.Failure<bool, ErrorList>(resultDb.Error);
+			}
 		}
 	}
 }

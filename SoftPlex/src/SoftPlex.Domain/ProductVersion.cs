@@ -33,7 +33,7 @@ namespace SoftPlex.Domain
 		}
 
 		public static Result<ProductVersion, ErrorList> Create(
-			Guid productVersionId
+			Guid Id
 			, Guid productId
 			, string name
 			, string? description
@@ -43,24 +43,27 @@ namespace SoftPlex.Domain
 		{
 			ErrorList errorList = new ErrorList();
 			if (string.IsNullOrWhiteSpace(name))
-				errorList.AddError(new Error("must not be empty",ErrorType.Validation, nameof(Name),productId));
+				errorList.AddError(new Error("must not be empty",ErrorType.Validation, nameof(Name), Id));
 				
 
 			if (name.Length >= MAX_TITLE_LENGHT)
-				errorList.AddError(new Error("maximum length exceeded", ErrorType.Validation, nameof(Name), productId));
+				errorList.AddError(new Error("maximum length exceeded", ErrorType.Validation, nameof(Name), Id));
 
 			if (name.Contains("404"))
-				errorList.AddError(new Error("contains 404", ErrorType.Validation, nameof(Name), productId));
+				errorList.AddError(new Error("contains 404", ErrorType.Validation, nameof(Name), Id));
 
+
+			if (description is not null && description.Contains("404"))
+				errorList.AddError(new Error("contains 404", ErrorType.Validation, nameof(Description), Id));
 
 			if (sizeBox is null)
-				errorList.AddError(new Error("invalid Size", ErrorType.Validation, nameof(SizeBox), productId));
+				errorList.AddError(new Error("invalid Size", ErrorType.Validation, nameof(SizeBox), Id));
 
 			if (errorList.IsError)
 				return Result.Failure<ProductVersion, ErrorList>(errorList);
 
 			return Result.Success<ProductVersion, ErrorList>(new ProductVersion(
-				productVersionId
+				Id
 				, productId
 				, name
 				, description

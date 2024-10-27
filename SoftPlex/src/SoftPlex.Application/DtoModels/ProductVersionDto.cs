@@ -12,6 +12,7 @@ namespace SoftPlex.Application.DtoModels
 		,string? Description
 		, decimal Width
 		, decimal Height
-		, decimal Length);
+		, decimal Length
+		);
 	
 }

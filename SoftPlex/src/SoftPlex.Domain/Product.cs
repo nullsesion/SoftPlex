@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Collections;
+using CSharpFunctionalExtensions;
 using SoftPlex.Domain.Shared;
 
 namespace SoftPlex.Domain
@@ -31,7 +32,7 @@ namespace SoftPlex.Domain
 		public static Result<Product, ErrorList> Create(Guid Id 
 			, string name
 			, string? description
-			, IEnumerable<ProductVersion>? productVersions)
+			, List<ProductVersion> productVersions)
 		{
 			ErrorList errorList = new ErrorList();
 			if (string.IsNullOrWhiteSpace(name))
@@ -47,14 +48,19 @@ namespace SoftPlex.Domain
 			if (description is not null && description.Contains("404"))
 				errorList.AddError(new Error("contains 404", ErrorType.Validation, nameof(Description), Id));
 
+			if (productVersions is null)
+				errorList.AddError(new Error("must not be empty", ErrorType.Validation, nameof(ProductVersions), Id));
+
 			if (errorList.IsError)
 				return Result.Failure<Product, ErrorList>(errorList);
+
+			
 
 			return Result.Success<Product, ErrorList>(new Product(
 				Id
 				, name
 				, description
-				, productVersions?.ToList() ?? new List<ProductVersion>()));
+				, productVersions));
 		}
 	}
 }

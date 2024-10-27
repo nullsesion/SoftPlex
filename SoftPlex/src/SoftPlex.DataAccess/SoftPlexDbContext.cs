@@ -12,7 +12,13 @@ namespace SoftPlex.DataAccess
 	{
 
 		private readonly IConfiguration _configuration;
-		public SoftPlexDbContext(IConfiguration configuration) => _configuration = configuration;
+		public SoftPlexDbContext(IConfiguration configuration)
+		{
+			_configuration = configuration;
+
+			this.Database.Migrate();
+			this.Database.EnsureCreatedAsync();
+		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -22,6 +28,11 @@ namespace SoftPlex.DataAccess
 				.UseLoggerFactory(CreateLoggerFactory)
 				.EnableSensitiveDataLogging()
 				;
+
+			/*
+			dbContext.Database.Migrate();
+			dbContext.Database.EnsureCreatedAsync();
+			*/
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -79,24 +79,20 @@ namespace SoftPlex.Api.Controllers
 			{
 				Product = productDTO
 			};
-
 			
 			var result = await _mediator.Send(createOrUpdateProduct, cancellationToken);
 			if (result.IsFailure)
+			{
 				return Results.BadRequest(result.Error);
+			}
+				
 			
 			return Results.Json(new { success = "ok" });
-
 			/*
 			RequestProductVersion t = value.ProductVersions.ToList().First();
 			ProductVersionDto? res = _mapper.Map<ProductVersionDto>(t);
 			return Results.Json(res);
 			*/
-			/*
-			ProductVersionDto
-			RequestProductVersion
-			*/
-
 			/*
 			Guid productGuid = value.Id == Guid.Empty ? Guid.NewGuid() : value.Id;
 			List<ProductVersion> productVersions = new List<ProductVersion>();
@@ -132,7 +128,6 @@ namespace SoftPlex.Api.Controllers
 			var result = await _mediator.Send(createOrUpdateProduct, cancellationToken);
 			if (result.IsFailure)
 				return Results.BadRequest(result.Error); 
-
 			*/
 			return Results.Json(new { success = "ok" });
 		}

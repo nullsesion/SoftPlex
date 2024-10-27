@@ -12,6 +12,7 @@ namespace SoftPlex.Api.MapperConfig
 	{
 		public AppMappingProfile()
 		{
+
 			CreateMap<RequestProduct, RequestProductDTO>()
 				.ForCtorParam(nameof(RequestProductDTO.Id)
 					, options => options.MapFrom(rpv => rpv.Id))
@@ -25,6 +26,7 @@ namespace SoftPlex.Api.MapperConfig
 				;
 
 			CreateMap<RequestProductVersion, ProductVersionDto>()
+				//.ForMember(x => x.IsNew, opt => opt.Ignore())
 				.ForCtorParam(nameof(ProductVersionDto.Id)
 				, options => options.MapFrom(rpv => rpv.Id))
 				.ForCtorParam(nameof(ProductVersionDto.ProductId)

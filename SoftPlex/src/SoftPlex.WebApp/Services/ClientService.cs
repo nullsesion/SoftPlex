@@ -74,12 +74,17 @@ namespace SoftPlex.WebApp.Services
 			await _client.DeleteAsync(DELETE_PRODUCTVERSION_POINT + id);
 		}
 
-		public async Task CreateProduct(string value)
+		public async Task<(bool IsSuccessStatusCode, string Content)> CreateProduct(string value)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Post, POST_CREATE_POINT);
-			var content = new StringContent(value, null, "application/json");
+			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, POST_CREATE_POINT);
+			StringContent content = new StringContent(value, null, "application/json");
 			request.Content = content;
-			var response = await _client.SendAsync(request);
+			HttpResponseMessage response = await _client.SendAsync(request);
+			
+			string responseContent = await response.Content.ReadAsStringAsync();
+			bool isSuccessStatusCode = response.IsSuccessStatusCode;
+
+			return (IsSuccessStatusCode: isSuccessStatusCode, Content: responseContent);
 		}
 
 	}
