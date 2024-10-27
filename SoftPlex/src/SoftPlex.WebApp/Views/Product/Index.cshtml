@@ -22,14 +22,15 @@
 		padding: 15px;
 		border: 1px solid #000;
 	}
-	</style>
+
+	.trg_pv:target {
+		background-color: lightyellow;
+	}
+</style>
 <table>
 	@if (Model.Count() > 0)
 	{
 		<tr>
-			@*
-		<th>Id</th>
-		*@
 			<th>Name</th>
 			<th>Description</th>
 			<th>ProductVersions</th>

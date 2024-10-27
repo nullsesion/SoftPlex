@@ -81,9 +81,9 @@ namespace SoftPlex.Application.CQRS.Products.Commands
 
 										if (d is not null)
 										{
-											var wErr = new Error(d.Message, d.Type, d.InvalidField, sb.Id);
+											var dErr = new Error(d.Message, d.Type, d.InvalidField, sb.Id);
 											context.AddFailure(new ValidationFailure(d.InvalidField
-												, wErr.Serialize()));
+												, dErr.Serialize()));
 										}
 									}
 								}

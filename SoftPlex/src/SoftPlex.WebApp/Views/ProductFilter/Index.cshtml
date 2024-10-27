@@ -1,6 +1,6 @@
 ﻿@using SoftPlex.Contracts;
 @using SoftPlex.Contracts.Response
-@model List<ResponseFilterEngine>
+@model ProductFilterModel
 
 @{
 	ViewBag.Title = "title";
@@ -12,18 +12,18 @@
 <form class="login_form" asp-controller="ProductFilter" asp-action="index" method="get">
 	<div class="login_form__row">
 		<label class="login_form__row_label">Product Name</label>
-		<input class="login_form__row_input" type="text" name="ProductName" value="@Context.Request.Query["ProductName"]" />
+		<input class="login_form__row_input" type="text" name="ProductName" value="@Model.ProductNameIn" />
 		
 
 		<label class="login_form__row_label">Product Version Name</label>
-		<input class="login_form__row_input" type="text" name="ProductVersionName" value="@Context.Request.Query["ProductVersionName"]" />
+		<input class="login_form__row_input" type="text" name="ProductVersionName" value="@Model.ProductVersionNameIn" />
 
 
 		<label class="login_form__row_label">Min Size</label>
-		<input class="login_form__row_input" type="text" name="MinSize" value="@Context.Request.Query["MinSize"]" />
+		<input class="login_form__row_input" type="text" name="MinSize" value="@Model.MinSize" />
 		
 		<label class="login_form__row_label">Max Size</label>
-		<input class="login_form__row_input" type="text" name="MaxSize" value="@Context.Request.Query["MaxSize"]" />
+		<input class="login_form__row_input" type="text" name="MaxSize" value="@Model.MaxSize" />
 
 		
 		<button class="login_form__row_button" type="submit">Применить</button>
@@ -46,43 +46,30 @@
 		
 		@if (Model is not null)
 		{
-			foreach (ResponseFilterEngine item in Model)
+			foreach (ResponseFilterEngine item in Model.FilterEngines)
 			{
 				<tr>
 					<td>
-						<a asp-controller="Product"
-						asp-action="Detail"
-						asp-route-id="@item.Id">@item.Id</a>
+
+						<a href="/Product/index#trg_@item.Id">@item.Id</a>
 					</td>
 					<td>
-						<a asp-controller="Product"
-						asp-action="Detail"
-						asp-route-id="@item.Id">@item.ProductName</a>
+						@item.ProductName
 					</td>
 					<td>
-						<a asp-controller="Product"
-						asp-action="Detail"
-						asp-route-id="@item.Id">@item.ProductVersionName</a>
+						@item.ProductVersionName
 					</td>
 					<td>
-						<a asp-controller="Product"
-						asp-action="Detail"
-						asp-route-id="@item.Id">@item.Width</a>
+						@item.Width
 					</td>
 					<td>
-						<a asp-controller="Product"
-						asp-action="Detail"
-						asp-route-id="@item.Id">@item.Height</a>
+						@item.Height
 					</td>
 					<td>
-						<a asp-controller="Product"
-						asp-action="Detail"
-						asp-route-id="@item.Id">@item.Length</a>
+						@item.Length
 					</td>
 				</tr>
 			}
 		}
-		
-
 	</table>
 </div>
