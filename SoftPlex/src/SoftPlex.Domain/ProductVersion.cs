@@ -1,12 +1,12 @@
 ﻿using SoftPlex.Domain.ValueObject;
 using CSharpFunctionalExtensions;
+using SoftPlex.Domain.Shared;
 
 namespace SoftPlex.Domain
 {
 	public class ProductVersion
 	{
 		public const int MAX_TITLE_LENGHT = 255;
-		public const int MAX_DESCRIPTION_LENGHT = 1024;
 
 		public Guid Id { get; private set; }
 		public Guid ProductId { get; private set; }
@@ -32,8 +32,8 @@ namespace SoftPlex.Domain
 			CreatingDate = creatingDate;
 		}
 
-		public static Result<ProductVersion> Create(
-			Guid productVersionId
+		public static Result<ProductVersion, ErrorList> Create(
+			Guid Id
 			, Guid productId
 			, string name
 			, string? description
@@ -41,17 +41,29 @@ namespace SoftPlex.Domain
 			, DateTime creatingDate
 			)
 		{
+			ErrorList errorList = new ErrorList();
 			if (string.IsNullOrWhiteSpace(name))
-				return Result.Failure<ProductVersion>("name must not be empty");
+				errorList.AddError(new Error("must not be empty",ErrorType.Validation, nameof(Name), Id));
+				
 
-			if (name.Length <= MAX_TITLE_LENGHT)
-				return Result.Failure<ProductVersion>("maximum name length exceeded");
+			if (name.Length >= MAX_TITLE_LENGHT)
+				errorList.AddError(new Error("maximum length exceeded", ErrorType.Validation, nameof(Name), Id));
 
-			if (description is not null && description.Length <= MAX_DESCRIPTION_LENGHT)
-				return Result.Failure<ProductVersion>("maximum description length exceeded");
+			if (name.Contains("404"))
+				errorList.AddError(new Error("contains 404", ErrorType.Validation, nameof(Name), Id));
 
-			return Result.Success(new ProductVersion(
-				productVersionId
+
+			if (description is not null && description.Contains("404"))
+				errorList.AddError(new Error("contains 404", ErrorType.Validation, nameof(Description), Id));
+
+			if (sizeBox is null)
+				errorList.AddError(new Error("invalid Size", ErrorType.Validation, nameof(SizeBox), Id));
+
+			if (errorList.IsError)
+				return Result.Failure<ProductVersion, ErrorList>(errorList);
+
+			return Result.Success<ProductVersion, ErrorList>(new ProductVersion(
+				Id
 				, productId
 				, name
 				, description

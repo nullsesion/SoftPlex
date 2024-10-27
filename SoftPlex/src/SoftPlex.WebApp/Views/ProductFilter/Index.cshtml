@@ -1,0 +1,88 @@
+﻿@using SoftPlex.Contracts;
+@using SoftPlex.Contracts.Response
+@model List<ResponseFilterEngine>
+
+@{
+	ViewBag.Title = "title";
+	Layout = "_Layout";
+}
+
+<h2>Поиск по фильтру</h2>
+
+<form class="login_form" asp-controller="ProductFilter" asp-action="index" method="get">
+	<div class="login_form__row">
+		<label class="login_form__row_label">Product Name</label>
+		<input class="login_form__row_input" type="text" name="ProductName" value="@Context.Request.Query["ProductName"]" />
+		
+
+		<label class="login_form__row_label">Product Version Name</label>
+		<input class="login_form__row_input" type="text" name="ProductVersionName" value="@Context.Request.Query["ProductVersionName"]" />
+
+
+		<label class="login_form__row_label">Min Size</label>
+		<input class="login_form__row_input" type="text" name="MinSize" value="@Context.Request.Query["MinSize"]" />
+		
+		<label class="login_form__row_label">Max Size</label>
+		<input class="login_form__row_input" type="text" name="MaxSize" value="@Context.Request.Query["MaxSize"]" />
+
+		
+		<button class="login_form__row_button" type="submit">Применить</button>
+
+	</div>
+</form>
+
+
+
+<div>
+	<table>
+		<tr>
+			<th>Id</th>
+			<th>ProductName</th>
+			<th>ProductVersionName</th>
+			<th>Width</th>
+			<th>Height</th>
+			<th>Length</th>
+		</tr>
+		
+		@if (Model is not null)
+		{
+			foreach (ResponseFilterEngine item in Model)
+			{
+				<tr>
+					<td>
+						<a asp-controller="Product"
+						asp-action="Detail"
+						asp-route-id="@item.Id">@item.Id</a>
+					</td>
+					<td>
+						<a asp-controller="Product"
+						asp-action="Detail"
+						asp-route-id="@item.Id">@item.ProductName</a>
+					</td>
+					<td>
+						<a asp-controller="Product"
+						asp-action="Detail"
+						asp-route-id="@item.Id">@item.ProductVersionName</a>
+					</td>
+					<td>
+						<a asp-controller="Product"
+						asp-action="Detail"
+						asp-route-id="@item.Id">@item.Width</a>
+					</td>
+					<td>
+						<a asp-controller="Product"
+						asp-action="Detail"
+						asp-route-id="@item.Id">@item.Height</a>
+					</td>
+					<td>
+						<a asp-controller="Product"
+						asp-action="Detail"
+						asp-route-id="@item.Id">@item.Length</a>
+					</td>
+				</tr>
+			}
+		}
+		
+
+	</table>
+</div>

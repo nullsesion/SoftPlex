@@ -1,15 +1,17 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Collections;
+using CSharpFunctionalExtensions;
+using SoftPlex.Domain.Shared;
 
 namespace SoftPlex.Domain
 {
 	public class Product
 	{
-		public const int MAX_TITLE_LENGHT = 255;
+		public const int MAX_NAME_LENGHT = 255;
 
 		public Guid Id { get; private set; }
 		public string Name { get; private set; }
 		public string? Description { get; private set; }
-		private List<ProductVersion> _productVersions;
+		private List<ProductVersion>? _productVersions;
 		public IReadOnlyList<ProductVersion> ProductVersions => _productVersions;
 
 		private Product(Guid id
@@ -26,28 +28,39 @@ namespace SoftPlex.Domain
 		public void UpdateProductVersions(List<ProductVersion> productVersions) 
 			=> _productVersions = productVersions;
 
-		
-		public static Result<Product> Create(Guid productId
+		//todo add ,Error
+		public static Result<Product, ErrorList> Create(Guid Id 
 			, string name
 			, string? description
-			, IEnumerable<ProductVersion> productVersions)
+			, List<ProductVersion> productVersions)
 		{
+			ErrorList errorList = new ErrorList();
 			if (string.IsNullOrWhiteSpace(name))
-				return Result.Failure<Product>("name must not be empty");
+				errorList.AddError(new Error("must not be empty", ErrorType.Validation, nameof(Name), Id));
 
-			if (name.Length <= MAX_TITLE_LENGHT)
-				return Result.Failure<Product>("maximum name length exceeded");
+			if (name.Length > MAX_NAME_LENGHT)
+				errorList.AddError(new Error("maximum length exceeded",ErrorType.Validation, nameof(Name), Id));
 
-			//if (description is not null && description.Length <= MAX_DESCRIPTION_LENGHT) return Result.Failure<Product>("maximum description length exceeded");
+			//for debug
+			if (name.Contains("404"))
+				errorList.AddError(new Error("contains 404", ErrorType.Validation, nameof(Name), Id));
 
-			return Result.Success<Product>(new Product(
-				productId
+			if (description is not null && description.Contains("404"))
+				errorList.AddError(new Error("contains 404", ErrorType.Validation, nameof(Description), Id));
+
+			if (productVersions is null)
+				errorList.AddError(new Error("must not be empty", ErrorType.Validation, nameof(ProductVersions), Id));
+
+			if (errorList.IsError)
+				return Result.Failure<Product, ErrorList>(errorList);
+
+			
+
+			return Result.Success<Product, ErrorList>(new Product(
+				Id
 				, name
 				, description
-				, productVersions.ToList()));
+				, productVersions));
 		}
-		
-		//for ef
-		private Product() { }
 	}
 }
