@@ -1,6 +1,35 @@
 version: '3.5'
 
 services:
+  webapp:
+    build: 
+      context: ../
+      dockerfile: ./docker/dotnet/Dockerfile
+    pull_policy: always
+    container_name: webapp_container
+    networks:
+      - postgres
+    ports:
+      - 5081:8081
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8081
+    restart: on-failure
+
+  webapi:
+    build: 
+      context: ../
+      dockerfile: ./docker/dotnet/Dockerfile
+    pull_policy: always
+    container_name: webapi
+    networks:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 5080:8080
+    restart: on-failure
+
   postgres:
     container_name: postgres_container
     image: postgres
@@ -11,7 +40,7 @@ services:
     volumes:
        - postgres:/data/postgres
     ports:
-      - "5432:5432"
+      - "54323:5432"
     networks:
       - postgres
     restart: unless-stopped

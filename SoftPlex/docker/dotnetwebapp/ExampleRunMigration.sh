@@ -1,0 +1,2 @@
+sed -i 's/"GeoApiDbContext": ".*"/"GeoApiDbContext": "'"$ConnectionStrings"'"/'  /app/buildcli/appsettings.json
+sed -i 's/"GeoApiDbContext": ".*"/"GeoApiDbContext": "'"$ConnectionStrings"'"/'  /app/buildapi/appsettings.Development.json
