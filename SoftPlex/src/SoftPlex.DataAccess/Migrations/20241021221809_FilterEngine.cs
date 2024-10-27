@@ -28,7 +28,7 @@ namespace SoftPlex.DataAccess.Migrations
 				LANGUAGE plpgsql
 				AS $$
 				BEGIN
-				    IF max_size < 0 THEN
+				    IF max_size > min_size  THEN
 				        RETURN QUERY
 				            select pv.id, p."name",pv."name",pv.width,pv.height,pv.length
 								from product as p join product_version as pv on p.id = pv.product_id

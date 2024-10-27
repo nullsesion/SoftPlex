@@ -5,9 +5,6 @@ using SoftPlex.Contracts.Request;
 using SoftPlex.Contracts.Response;
 using SoftPlex.Shared.Response;
 using SoftPlex.WebApp.Services;
-using System.Net.Mime;
-using System.Security.Principal;
-using System.Text;
 
 namespace SoftPlex.WebApp.Controllers
 {
