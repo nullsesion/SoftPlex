@@ -23,8 +23,8 @@ $(function () {
                     "productId": name_product_id,
                     "name": $(e).find('[name="name"]').val(),
                     "description": $(e).find('[name="description"]').val(),
-                    "width": $(e).find('[name="height"]').val() * 1,
-                    "height": $(e).find('[name="width"]').val() * 1,
+                    "width": $(e).find('[name="width"]').val() * 1,
+                    "height": $(e).find('[name="height"]').val() * 1,
                     "length": $(e).find('[name="length"]').val() * 1,
                 });
             });
