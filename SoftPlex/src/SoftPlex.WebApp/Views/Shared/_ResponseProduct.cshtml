@@ -20,7 +20,7 @@
 		</td>
 		<td>@item.Description</td>
 		<td>
-			@if (@item.ProductVersions is not null && @item.ProductVersions.Count() > 0)
+			@if (@item.ProductVersions.Any())
 			{
 				@foreach (var productVersion in @item.ProductVersions)
 				{
