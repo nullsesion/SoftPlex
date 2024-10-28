@@ -44,15 +44,18 @@
 									@productVersion.SizeBox.Width x @productVersion.SizeBox.Height x @productVersion.SizeBox.Length
 								</td>
 							</tr>
-							<tr>
-								<th>Action</th>
-								<td>
-									<a onclick="return confirm('Are you sure you want to delete this item?');"
-									   asp-controller="Product"
-									   asp-action="RemoveProductVersion"
-									   asp-route-id="@productVersion.Id">Remove</a>
-								</td>
-							</tr>
+							@if (User.Identity.IsAuthenticated)
+							{
+								<tr>
+									<th>Action</th>
+									<td>
+										<a onclick="return confirm('Are you sure you want to delete this item?');"
+										   asp-controller="Product"
+										   asp-action="RemoveProductVersion"
+										   asp-route-id="@productVersion.Id">Remove</a>
+									</td>
+								</tr>
+							}
 						</table>
 					</div>
 				}
