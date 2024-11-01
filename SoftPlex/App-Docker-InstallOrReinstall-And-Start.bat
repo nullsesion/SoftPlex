@@ -1,4 +1,11 @@
 @echo off
+
+If Exist "docker\.env" (
+    Echo .env exist 
+) Else (
+    copy docker\sample.env docker\.env /a
+)
+
 docker-compose -f docker/docker-compose.yml down
 TIMEOUT /T 5
 docker-compose -f docker/docker-compose.yml build

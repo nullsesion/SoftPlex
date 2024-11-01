@@ -8,11 +8,11 @@ namespace SoftPlex.WebApp.Controllers
 {
 	public class ProductFilterController : Controller
 	{
-		private readonly ClientService _clientService;
+		private readonly ClientApiProductService _clientApiProductService;
 
-		public ProductFilterController(ClientService clientService)
+		public ProductFilterController(ClientApiProductService clientApiProductService)
 		{
-			_clientService = clientService;
+			_clientApiProductService = clientApiProductService;
 		}
 
 		public async Task<IActionResult> Index(string productName = "",string productVersionName = "", string minSize = "", string maxSize = "")
@@ -39,7 +39,7 @@ namespace SoftPlex.WebApp.Controllers
 				, MaxSize = maxS
 			};
 
-			model.FilterEngines = await _clientService
+			model.FilterEngines = await _clientApiProductService
 				.GetFilter(productName
 					, productVersionName
 					, minS
