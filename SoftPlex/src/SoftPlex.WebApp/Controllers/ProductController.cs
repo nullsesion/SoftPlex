@@ -10,24 +10,24 @@ namespace SoftPlex.WebApp.Controllers
 {
 	public class ProductController : Controller
 	{
-		private readonly ClientService _clientService;
+		private readonly ClientApiProductService _clientApiProductService;
 
-		public ProductController(ClientService clientService)
+		public ProductController(ClientApiProductService clientApiProductService)
 		{
-			_clientService = clientService;
+			_clientApiProductService = clientApiProductService;
 		}
 
 		public async Task<IActionResult> Index()
 		{
 			//todo: add async
-			IEnumerable<ResponseProduct> res = await _clientService.GetProducts();
+			IEnumerable<ResponseProduct> res = await _clientApiProductService.GetProducts();
 			return View(res);
 		}
 
 		public async Task<IActionResult> Detail(Guid id)
 		{
 			//todo: add async
-			ResponseProduct res = await _clientService.GetProductDetail(id);
+			ResponseProduct res = await _clientApiProductService.GetProductDetail(id);
 			return View(res);
 		}
 
@@ -35,7 +35,7 @@ namespace SoftPlex.WebApp.Controllers
 		public async Task<IActionResult> RemoveProduct(Guid id)
 		{
 			//todo: add async
-			await _clientService.RemoveProduct(id);
+			await _clientApiProductService.RemoveProduct(id);
 			return RedirectToAction("Index");
 		}
 
@@ -43,7 +43,7 @@ namespace SoftPlex.WebApp.Controllers
 		public async Task<IActionResult> RemoveProductVersion(Guid id)
 		{
 			//todo: add async
-			await _clientService.RemoveProductVersion(id);
+			await _clientApiProductService.RemoveProductVersion(id);
 			return RedirectToAction("Index");
 		}
 
@@ -62,7 +62,7 @@ namespace SoftPlex.WebApp.Controllers
 			;
 			
 			string json = JsonConvert.SerializeObject(request);
-			(bool IsSuccessStatusCode, string Content) res = await _clientService.CreateProduct(json);
+			(bool IsSuccessStatusCode, string Content) res = await _clientApiProductService.CreateProduct(json);
 			
 			if (res.IsSuccessStatusCode)
 			{
