@@ -1,1 +1,2 @@
 ## root git ignore use SoftPlex/.gitignore
+.env
