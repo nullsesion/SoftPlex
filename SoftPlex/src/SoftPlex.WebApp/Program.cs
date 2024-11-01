@@ -1,5 +1,6 @@
 using SoftPlex.WebApp.Services;
 using System.Security.Claims;
+using Microsoft.Net.Http.Headers;
 
 namespace SoftPlex.WebApp
 {
@@ -32,7 +33,15 @@ namespace SoftPlex.WebApp
 				});
 			});
 
-			builder.Services.AddScoped<ClientService>();
+			builder.Services.AddHttpClient(nameof(ClientApiProductService), (HttpClient client) =>
+			{
+				var section = builder.Configuration.GetSection("AppSettings");
+				string host = section.GetValue(nameof(ClientApiProductService), "https://localhost:7044");
+				client.BaseAddress = new Uri(host);
+				client.DefaultRequestHeaders.Add(HeaderNames.UserAgent,"WebApp");
+			})
+			;
+			builder.Services.AddScoped<ClientApiProductService>();
 
 
 			var app = builder.Build();
