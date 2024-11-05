@@ -1,12 +1,16 @@
 ﻿using Newtonsoft.Json;
 using SoftPlex.Contracts.Response;
 using System.Net.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using ResponseProductVersion = SoftPlex.Contracts.Response.ResponseProductVersion;
+using System.Text;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace SoftPlex.WebApp.Services
 {
 	public class ClientApiProductService
 	{
+		private ClientApiProductCacheService _distributedCache;
 		private const string GET_PRODUCTS_POINT = "/api/Product?page=1&pageSize=100";
 		private const string GET_PRODUCTS_BY_ID = "/api/Product/";
 		private const string DELETE_PRODUCT_POINT = "/api/Product/";
@@ -18,12 +22,13 @@ namespace SoftPlex.WebApp.Services
 
 
 
-		public ClientApiProductService(IHttpClientFactory clientFactory)
+		public ClientApiProductService(IHttpClientFactory clientFactory
+			, ClientApiProductCacheService distributedCache) //, IDistributedCache cache
 		{
+			_distributedCache = distributedCache;
 			_clientFactory = clientFactory;
 			_httpClient = _clientFactory.CreateClient(nameof(ClientApiProductService));
 		}
-		
 
 		public async Task<List<ResponseFilterEngine>> GetFilter (
 			string productNameIn = ""
@@ -34,6 +39,9 @@ namespace SoftPlex.WebApp.Services
 		{
 			string getFilterPoint = GET_FILTER_POINT
 			 + $"?productNameIn={productNameIn}&productVersionNameIn={productVersionNameIn}&minSize={minSize}&maxSize={maxSize}";
+
+			//_cache.GetAsync()
+
 			HttpResponseMessage response = await _httpClient.GetAsync(getFilterPoint);
 			string rawJson = await response.Content.ReadAsStringAsync();
 
@@ -44,11 +52,30 @@ namespace SoftPlex.WebApp.Services
 
 		public async Task<List<ResponseProduct>> GetProducts()
 		{
-			HttpResponseMessage response = await _httpClient.GetAsync( GET_PRODUCTS_POINT);
-			string rawJson = await response.Content.ReadAsStringAsync();
+			string rawJson = String.Empty;
+			
+			string cacheGetProductsKey = "GetProducts";
+			rawJson = await _distributedCache.TryGetAsync(cacheGetProductsKey);
+			if (string.IsNullOrWhiteSpace(rawJson))
+			{
+				HttpResponseMessage response = await _httpClient.GetAsync(GET_PRODUCTS_POINT);
+				rawJson = await response.Content.ReadAsStringAsync();
+				_distributedCache.TrySetAsync(cacheGetProductsKey, rawJson);
+			}
+			/*
+			string cacheGetProductsKey = "GetProducts";
+			rawJson = await _cache.GetStringAsync(cacheGetProductsKey) ?? String.Empty;
+			if (string.IsNullOrWhiteSpace(rawJson))
+			{
+				byte[] rawJsonBye = UTF8Encoding.UTF8.GetBytes(rawJson);
+				_cache.SetAsync(cacheGetProductsKey, rawJsonBye, new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+				});
+			}
+			*/
 
 			List<ResponseProduct> listResponseProduct = JsonConvert.DeserializeObject<List<ResponseProduct>>(rawJson);
-			
 			return listResponseProduct;
 		}
 
@@ -90,5 +117,5 @@ namespace SoftPlex.WebApp.Services
 		}
 
 	}
-
+	
 }

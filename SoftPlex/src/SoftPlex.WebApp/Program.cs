@@ -32,7 +32,12 @@ namespace SoftPlex.WebApp
 					builder.RequireClaim(ClaimTypes.Role, "Administrator");
 				});
 			});
-
+			
+			builder.Services.AddStackExchangeRedisCache(options => {
+				options.Configuration = "127.0.0.1:6380";
+				options.InstanceName = "WebApp_";
+			});
+			
 			builder.Services.AddHttpClient(nameof(ClientApiProductService), (HttpClient client) =>
 			{
 				var section = builder.Configuration.GetSection("AppSettings");
@@ -42,6 +47,8 @@ namespace SoftPlex.WebApp
 			})
 			;
 			builder.Services.AddScoped<ClientApiProductService>();
+			builder.Services.AddScoped<ClientApiProductCacheService>();
+			
 
 
 			var app = builder.Build();
