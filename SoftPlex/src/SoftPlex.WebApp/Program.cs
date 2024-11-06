@@ -33,15 +33,16 @@ namespace SoftPlex.WebApp
 				});
 			});
 			
-			builder.Services.AddStackExchangeRedisCache(options => {
-				options.Configuration = "127.0.0.1:6380";
-				options.InstanceName = "WebApp_";
+			builder.Services.AddStackExchangeRedisCache(options =>
+			{
+				options.Configuration = builder.Configuration.GetConnectionString(nameof(ClientApiProductCacheService));
 			});
 			
 			builder.Services.AddHttpClient(nameof(ClientApiProductService), (HttpClient client) =>
 			{
 				var section = builder.Configuration.GetSection("AppSettings");
-				string host = section.GetValue(nameof(ClientApiProductService), "https://localhost:7044");
+				string host = section.GetValue(nameof(ClientApiProductService), "https://localhost:7044")
+						?? "https://localhost:7044";
 				client.BaseAddress = new Uri(host);
 				client.DefaultRequestHeaders.Add(HeaderNames.UserAgent,"WebApp");
 			})
@@ -71,11 +72,6 @@ namespace SoftPlex.WebApp
 			app.UseAuthorization();
 
 			app.MapDefaultControllerRoute();
-			/*
-			app.MapControllerRoute(
-				name: "default",
-				pattern: "{controller=Home}/{action=Index}/{id?}");
-			*/
 
 			app.Run();
 		}

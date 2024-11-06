@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using System.Text;
+using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace SoftPlex.WebApp.Services
 {
@@ -8,6 +10,8 @@ namespace SoftPlex.WebApp.Services
 		private readonly IDistributedCache _distributedCache;
 		private readonly DistributedCacheEntryOptions _options;
 		private const string Prefix = "webapp_";
+		private const string REDIS_ERROR = "Redis error";
+		private bool _serverAviable { get; set; }
 
 		public ClientApiProductCacheService(IDistributedCache distributedCache)
 		{
@@ -18,23 +22,49 @@ namespace SoftPlex.WebApp.Services
 					TimeSpan.FromSeconds(120),
 				SlidingExpiration = TimeSpan.FromSeconds(60)
 			};
+			/*
+			_serverAviable = true;
+			try
+			{
+				//_distributedCache.
+			}
+			catch
+			{
+				_serverAviable = false;
+			}
+			*/
 		}
 
-		public async Task<string> TryGetAsync(string key)
+		public async Task<Result<string>> TryGetAsync(string key)
 		{
-			var keyRedis = Prefix + key;
-			var cache = await _distributedCache.GetStringAsync(keyRedis);
-			if (cache is null)
-				return string.Empty;
+			try
+			{
+				string keyRedis = Prefix + key;
+				string? cache = await _distributedCache.GetStringAsync(keyRedis);
+				if (cache is null)
+					return Result.Success(string.Empty);
 
-			return cache;
+				return cache;
+			}
+			catch
+			{
+				return Result.Failure<string>(REDIS_ERROR);
+			}
 		}
 
-		public async Task TrySetAsync(string key, string content)
+		public async Task<Result> TrySetAsync(string key, string content)
 		{
-			var keyRedis = Prefix + key;
-			byte[] rawJsonBye = UTF8Encoding.UTF8.GetBytes(content);
-			_distributedCache.SetAsync(keyRedis, rawJsonBye, _options);
+			try
+			{
+				string keyRedis = Prefix + key;
+				byte[] rawJsonBye = UTF8Encoding.UTF8.GetBytes(content);
+				await _distributedCache.SetAsync(keyRedis, rawJsonBye, _options);
+				return Result.Success();
+			}
+			catch
+			{
+				return Result.Failure(REDIS_ERROR);
+			}
 		}
 	}
 }

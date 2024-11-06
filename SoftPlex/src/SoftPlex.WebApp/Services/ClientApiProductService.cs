@@ -4,6 +4,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using ResponseProductVersion = SoftPlex.Contracts.Response.ResponseProductVersion;
 using System.Text;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace SoftPlex.WebApp.Services
@@ -21,13 +22,13 @@ namespace SoftPlex.WebApp.Services
 		private HttpClient _httpClient { get; set; }
 
 
-
 		public ClientApiProductService(IHttpClientFactory clientFactory
 			, ClientApiProductCacheService distributedCache) //, IDistributedCache cache
 		{
 			_distributedCache = distributedCache;
 			_clientFactory = clientFactory;
 			_httpClient = _clientFactory.CreateClient(nameof(ClientApiProductService));
+			//_serverAviable
 		}
 
 		public async Task<List<ResponseFilterEngine>> GetFilter (
@@ -55,25 +56,18 @@ namespace SoftPlex.WebApp.Services
 			string rawJson = String.Empty;
 			
 			string cacheGetProductsKey = "GetProducts";
-			rawJson = await _distributedCache.TryGetAsync(cacheGetProductsKey);
-			if (string.IsNullOrWhiteSpace(rawJson))
+			Result<string> res = await _distributedCache.TryGetAsync(cacheGetProductsKey);
+			if (res.IsFailure || string.IsNullOrWhiteSpace(res.Value))
 			{
 				HttpResponseMessage response = await _httpClient.GetAsync(GET_PRODUCTS_POINT);
 				rawJson = await response.Content.ReadAsStringAsync();
-				_distributedCache.TrySetAsync(cacheGetProductsKey, rawJson);
+				if(res.IsSuccess)
+					_distributedCache.TrySetAsync(cacheGetProductsKey, rawJson);
 			}
-			/*
-			string cacheGetProductsKey = "GetProducts";
-			rawJson = await _cache.GetStringAsync(cacheGetProductsKey) ?? String.Empty;
-			if (string.IsNullOrWhiteSpace(rawJson))
+			else
 			{
-				byte[] rawJsonBye = UTF8Encoding.UTF8.GetBytes(rawJson);
-				_cache.SetAsync(cacheGetProductsKey, rawJsonBye, new DistributedCacheEntryOptions
-				{
-					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-				});
+				rawJson = res.Value;
 			}
-			*/
 
 			List<ResponseProduct> listResponseProduct = JsonConvert.DeserializeObject<List<ResponseProduct>>(rawJson);
 			return listResponseProduct;
@@ -81,6 +75,10 @@ namespace SoftPlex.WebApp.Services
 
 		public async Task<ResponseProduct> GetProductDetail(Guid id)
 		{
+			//GetProducts
+			/*
+			use cache
+			*/
 			HttpResponseMessage response = await _httpClient.GetAsync( GET_PRODUCTS_BY_ID + id);
 			string rawJson = await response.Content.ReadAsStringAsync();
 
